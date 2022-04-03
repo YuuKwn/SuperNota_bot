@@ -15,7 +15,6 @@ import logging
 import os
 
 PORT = int(os.environ.get('PORT', 8443))
-movie_year = ''
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -79,6 +78,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
 def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
     movie_name = separate[0]
+    movie_year = ""
     if len(separate) > 1:
         movie_year = separate[1]
     print('text:', movie_name)   # /start something
