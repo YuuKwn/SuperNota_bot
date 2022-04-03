@@ -81,8 +81,8 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     movie_name = separate[0]
     if len(separate) > 1:
         movie_year = separate[1]
-    print('text:', update.message.text)   # /start something
-    print('args:', context.args)          # ['something']
+    print('text:', movie_name)   # /start something
+    print('args:', movie_year)          # ['something']
     txt = get_rotten_tomatoes_rating(movie_name, movie_year)
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
