@@ -40,8 +40,8 @@ def error(update, context):
 def start(update: Update, context: CallbackContext):
     update.message.reply_text('Hi!')
 
-def get_rotten_tomatoes_movie_posters(movie_name):
-    url = 'http://www.omdbapi.com/?t=' + movie_name + '&apikey=' + key
+def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
+    url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + key
     response = requests.get(url)
     data = json.loads(response.text)
     if data['Response'] == 'True' and data['Poster'] != 'N/A':
@@ -49,8 +49,8 @@ def get_rotten_tomatoes_movie_posters(movie_name):
     else:
         return 'https://i.imgur.com/jfkRgwB.png'
 
-def get_rotten_tomatoes_rating(movie_name):
-    url = 'http://www.omdbapi.com/?t=' + movie_name + '&apikey=' + key
+def get_rotten_tomatoes_rating(movie_name, movie_year):
+    url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + key
     response = requests.get(url)
     data = json.loads(response.text)
 
@@ -77,12 +77,14 @@ def get_rotten_tomatoes_rating(movie_name):
 
 
 def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
-    #movie_name = update.message.text.split(' ')[0]
+    separate = " ".join(context.args).split(",")
+    movie_name = separate[0]
+    if len(separate) > 1:
+        movie_year = separate[1]
     print('text:', update.message.text)   # /start something
     print('args:', context.args)          # ['something']
-    movie_name = " ".join(context.args)
-    txt = get_rotten_tomatoes_rating(movie_name)
-    update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name), caption= str(txt))
+    txt = get_rotten_tomatoes_rating(movie_name, movie_year)
+    update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
     
 def main():
