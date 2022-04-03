@@ -95,8 +95,8 @@ def main():
 
     updater.start_webhook(listen="0.0.0.0",
                             port=int(PORT),
-                            url_path=TOKEN)
-    updater.bot.setWebhook('https://supernota-bot.herokuapp.com/' + TOKEN)
+                            url_path=TOKEN,
+                            webhook_url='https://supernota-bot.herokuapp.com/' + TOKEN)
 
     updater.idle()
     
