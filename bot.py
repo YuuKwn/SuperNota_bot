@@ -77,7 +77,7 @@ def get_rotten_tomatoes_rating(movie_name):
 
 
 def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
-    movie_name = context.args[0]
+    movie_name = context.args[1]
     txt = get_rotten_tomatoes_rating(movie_name)
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name), caption= str(txt))
 
