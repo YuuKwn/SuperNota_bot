@@ -14,7 +14,7 @@ import requests, json
 import logging
 import os
 
-PORT = int(os.environ.get('PORT', 5000))
+PORT = int(os.environ.get('PORT', 8443))
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 key = 'd87fbf5f'
 movieExists = False
-TOKEN= '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
+TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
 
 
 
@@ -100,9 +100,5 @@ def main():
 
     updater.idle()
     
-
-
-
-
 if __name__ == '__main__':
     main()
