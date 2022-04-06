@@ -1,6 +1,7 @@
 
 """
-Simple Bot to return the rating of a movie using the movie title
+Ver. 1.0
+Telegram Bot to return the rating of a movie using the movie title
 Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
@@ -37,7 +38,7 @@ def error(update, context):
 
 
 def start(update: Update, context: CallbackContext):
-    update.message.reply_text('Hi!')
+    update.message.reply_text('fala fi')
 
 def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + key
@@ -86,12 +87,30 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     txt = get_rotten_tomatoes_rating(movie_name, movie_year)
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
+
+def get_open_critic_game_rating(game_name):
+    url = 'https://www.opencritic.com/api/v1/games/' + game_name
+    response = requests.get(url)
+    data = json.loads(response.text)
+    if data['status'] == 'success':
+        return data['data']['rating']
+    else:
+        return 'Não encontrei nenhuma nota para ' + game_name
+
+
+def print_open_critic_game_rating(update: Update, context: CallbackContext):
+    game_name = " ".join(context.args)
+    print('text:', game_name)   # /start something
+    txt = get_open_critic_game_rating(game_name)
+    update.message.reply_text(txt)
+
     
 def main():
     updater = Updater(TOKEN,
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
+    updater.dispatcher.add_handler(CommandHandler('game', get_open_critic_game_rating))
 
     ##updater.dispatcher.add_handler(MessageHandler(Filters.text, echo))
     updater.dispatcher.add_error_handler(error)
