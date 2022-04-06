@@ -15,6 +15,7 @@ import requests, json
 import logging
 import os
 
+
 PORT = int(os.environ.get('PORT', 8443))
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -104,13 +105,13 @@ def print_open_critic_game_rating(update: Update, context: CallbackContext):
     txt = get_open_critic_game_rating(game_name)
     update.message.reply_text(txt)
 
-    
+
 def main():
     updater = Updater(TOKEN,
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
-    updater.dispatcher.add_handler(CommandHandler('game', get_open_critic_game_rating))
+    updater.dispatcher.add_handler(CommandHandler('game', print_open_critic_game_rating))
 
     ##updater.dispatcher.add_handler(MessageHandler(Filters.text, echo))
     updater.dispatcher.add_error_handler(error)
