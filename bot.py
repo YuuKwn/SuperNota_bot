@@ -15,7 +15,7 @@ import logging
 import os
 from igdb.wrapper import IGDBWrapper
 
-wrapper = IGDBWrapper("rb28wttfszwg5kki1baracnzlki67z", "ydln1vj0jcszcvljnw67shq0n3d6jr")
+wrapper = IGDBWrapper("rb28wttfszwg5kki1baracnzlki67z", "4brh4mj72cnb5b55yr4nwt9j44m48t")
 
 
 PORT = int(os.environ.get('PORT', 8443))
