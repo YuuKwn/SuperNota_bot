@@ -92,6 +92,7 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
 
 def get_igdb_rating(game_name):
     array = wrapper.api_request('games', query=game_name)
+    print("foi viu?")
     if len(array) > 0:
         return array[0]['rating']
     else:
