@@ -91,14 +91,14 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
 def get_igdb_rating(game_name):
-    results = wrapper.search(game_name)
+    results = wrapper.api_request('/games/?search=' + game_name)
     if len(results) > 0:
         return results[0]['rating']
     else:
-        return 'Não encontrei nenhuma nota para ' + game_name
+        return 'Não encontrei ' + game_name
 
 def get_igdb_game_posters(game_name):
-    results = wrapper.search(game_name)
+    results = wrapper.api_request('/games/?search=' + game_name)
     if len(results) > 0:
         return results[0]['cover']['url']
     else:
