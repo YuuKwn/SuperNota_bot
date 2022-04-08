@@ -1,7 +1,6 @@
-
 """
 Ver. 1.0
-Telegram Bot to return the rating of a movie using the movie title
+Telegram Bot to return the rating of a movie or game using the title
 Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
@@ -14,6 +13,9 @@ from telegram.ext.filters import Filters
 import requests, json
 import logging
 import os
+from igdb.wrapper import IGDBWrapper
+
+wrapper = IGDBWrapper("rb28wttfszwg5kki1baracnzlki67z", "ydln1vj0jcszcvljnw67shq0n3d6jr")
 
 
 PORT = int(os.environ.get('PORT', 8443))
@@ -88,22 +90,26 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     txt = get_rotten_tomatoes_rating(movie_name, movie_year)
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
-
-def get_open_critic_game_rating(game_name):
-    url = 'https://www.opencritic.com/api/v1/games/' + game_name
-    response = requests.get(url)
-    data = json.loads(response.text)
-    if data['status'] == 'success':
-        return data['data']['rating']
+def get_igdb_rating(game_name):
+    results = wrapper.search(game_name)
+    if len(results) > 0:
+        return results[0]['rating']
     else:
         return 'Não encontrei nenhuma nota para ' + game_name
 
+def get_igdb_game_posters(game_name):
+    results = wrapper.search(game_name)
+    if len(results) > 0:
+        return results[0]['cover']['url']
+    else:
+        return 'https://i.imgur.com/jfkRgwB.png'
 
-def print_open_critic_game_rating(update: Update, context: CallbackContext):
+def print_igdb_rating(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     print('text:', game_name)   # /start something
-    txt = get_open_critic_game_rating(game_name)
-    update.message.reply_text(txt)
+    txt = get_igdb_rating(game_name)
+    update.message.reply_photo(get_igdb_game_posters(game_name), caption= str(txt))
+
 
 
 def main():
@@ -111,8 +117,7 @@ def main():
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
-    updater.dispatcher.add_handler(CommandHandler('game', print_open_critic_game_rating))
-
+    updater.dispatcher.add_handler(CommandHandler('game', print_igdb_rating))
     ##updater.dispatcher.add_handler(MessageHandler(Filters.text, echo))
     updater.dispatcher.add_error_handler(error)
 

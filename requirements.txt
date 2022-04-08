@@ -1,2 +1,4 @@
-python-telegram-bot==13.11
+igdb_api_v4==0.0.5
+python_telegram_bot==13.11
 requests==2.27.1
+telegram==0.0.1
