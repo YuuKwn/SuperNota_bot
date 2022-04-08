@@ -93,22 +93,22 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
 def get_igdb_rating(game_name):
     results = wrapper.api_request(
             'games',
-            'fields id, name; offset 0; where platforms=48;'
-          )
-    for i in range(len(results)):
-        if results[i]['name'] == game_name:
-            return 'A nota do IGDB para ' + game_name + ' é ' + str(results[i]['rating'])
-    return 'Não encontrei ' + game_name
+            'fields name.*; where name = "' + game_name + '"; limit 1;'
+        )
+    if results:
+        return 'A nota do IGDB para ' + game_name + ' é ' + str(results[0]['rating'])
+    else:
+        return 'Não encontrei ' + game_name
 
 def get_igdb_game_posters(game_name):
     results = wrapper.api_request(
             'games',
-            'fields id, name; offset 0; where platforms=48;'
-          )
-    for i in range(len(results)):
-        if results[i]['name'] == game_name:
-            return 'https://images.igdb.com/igdb/image/upload/t_cover_big/' + results[i]['cover']
-    return 'https://i.imgur.com/jfkRgwB.png'
+            'fields name.*; where name = "' + game_name + '"; limit 1;'
+        )
+    if results:
+        return results[0]['cover']['url']
+    else:
+        return 'https://i.imgur.com/jfkRgwB.png'
     
 
 def print_igdb_rating(update: Update, context: CallbackContext):
