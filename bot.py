@@ -96,7 +96,7 @@ def get_igdb_rating(game_name):
             'fields name, rating; where name = "' + game_name + '"; limit 1;'
         )
     if results:
-        return 'A nota do IGDB para ' + game_name + ' é ' + str(results[0]['rating'])
+        return 'A nota do IGDB para ' + game_name + ' é '
     else:
         return 'Não encontrei ' + game_name
 
