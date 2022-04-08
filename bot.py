@@ -91,15 +91,14 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
 def get_igdb_rating(game_name):
-    array = wrapper.api_request('games', 'fields name=game_name;')
-    print("foi viu?")
+    array = wrapper.api_request('games', filters={'name': game_name}, fields=['name', 'rating'])
     if len(array) > 0:
         return array[0]['rating']
     else:
-        return 'Não encontrei ' + game_name
+        return 'Não encontrei nenhuma nota para ' + game_name
 
 def get_igdb_game_posters(game_name):
-    results = wrapper.api_request('games', 'fields name=game_name;')
+    results = wrapper.api_request('games', filters={'name': game_name}, fields=['name', 'cover'])
     if len(results) > 0:
         return results[0]['cover']['url']
     else:
