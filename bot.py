@@ -46,6 +46,7 @@ def get_op_info(url):
     op_content = requests.get(url, headers = headers).text
     url = BeautifulSoup(op_content, 'html.parser')
     rating_text = url.find_all('div', class_ = 'inner-orb')
+    print (rating_text)
     if rating_text:
         rating = rating_text[0].text
         recommendation = rating_text[1].text
