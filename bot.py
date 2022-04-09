@@ -13,10 +13,8 @@ from telegram.ext.filters import Filters
 import requests, json
 import logging
 import os
-from igdb.wrapper import IGDBWrapper
 from bs4 import BeautifulSoup
 
-wrapper = IGDBWrapper("rb28wttfszwg5kki1baracnzlki67z", "4brh4mj72cnb5b55yr4nwt9j44m48t")
 
 
 PORT = int(os.environ.get('PORT', 8443))
