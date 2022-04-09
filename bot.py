@@ -39,7 +39,7 @@ def get_op_page(game_name):
     content = requests.get(url, headers = headers).text
     soup = BeautifulSoup(content, 'html.parser')
     firstrating = soup.find('g-review-stars')
-    first_link = firstrating.find_parent('a')
+    first_link = firstrating.find_previous('a')
     return first_link['href']
 
 def get_op_info(url):
