@@ -54,6 +54,7 @@ def get_op_info(url):
         game_image = url.find('img', {'alt' : game_title + ' header image'}).get('src')
 
         platforms = url.find_all('strong')
+        print (platforms)
         available_platforms = ''
         for i in range(len(platforms)):
             available_platforms += platforms[i].text + ', '
