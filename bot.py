@@ -38,8 +38,8 @@ def get_op_page(game_name):
     url = 'https://www.google.com/search?q=opencritic+' + game_name
     content = requests.get(url, headers = headers).text
     soup = BeautifulSoup(content, 'html.parser')
-    search = soup.find(id = 'search')
-    first_link = search.find('a')
+    firstrating = soup.find('g-review-stars')
+    first_link = firstrating.find_parent('a')
     return first_link['href']
 
 def get_op_info(url):
@@ -67,12 +67,7 @@ def get_op_info(url):
         available_platforms = available_platforms[:-2]
         return rating, recommendation, game_title, game_image, available_platforms
     else:
-        rating = 'Jogo não encontrado no banco de dados do OpenCritic'
-        recommendation = ''
-        game_title = ''
-        game_image = 'https://i.imgur.com/jfkRgwB.png'
-        available_platforms = ''
-        return rating, recommendation, game_title, game_image, available_platforms
+        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', '', ''
 
 def error(update, context):
     """Log Errors caused by Updates."""
