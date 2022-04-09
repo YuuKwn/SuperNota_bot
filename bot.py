@@ -40,6 +40,8 @@ def get_op_page(game_name):
     content = requests.get(url, headers = headers).text
     soup = BeautifulSoup(content, 'html.parser')
     firstrating = soup.find('g-review-stars')
+    if firstrating is None:
+        return 'https://opencritic.com/game/3698/score/reviews'
     first_link = firstrating.find_previous('a')
     return first_link['href']
 
