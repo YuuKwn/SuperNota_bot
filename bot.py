@@ -14,6 +14,7 @@ import requests, json
 import logging
 import os
 from igdb.wrapper import IGDBWrapper
+from bs4 import BeautifulSoup
 
 wrapper = IGDBWrapper("rb28wttfszwg5kki1baracnzlki67z", "4brh4mj72cnb5b55yr4nwt9j44m48t")
 
@@ -29,11 +30,35 @@ key = 'd87fbf5f'
 movieExists = False
 TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
 
+headers = {
+	'Accept' : '*/*',
+	'Accept-Language': 'en-US,en;q=0.5',
+	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82',
+}
 
+def get_op_page(game_name):
+    url = 'https://www.google.com/search?q=opencritic+' + game_name
+    content = requests.get(url, headers = headers).text
+    soup = BeautifulSoup(content, 'html.parser')
+    search = soup.find(id = 'search')
+    first_link = search.find('a')
+    return first_link['href']
 
-def echo(update, context):
-    """Echo the user message."""
-    update.message.reply_text(update.message.text)
+def get_op_info(url):
+    op_content = requests.get(url, headers = headers).text
+    url = BeautifulSoup(op_content, 'html.parser')
+    rating_text = url.find_all('div', class_ = 'inner-orb')
+    rating = rating_text[0].text
+    recommendation = rating_text[1].text
+    game_title = url.find('h1').text
+    game_image = url.find('img', {'alt' : game_title + ' header image'}).get('src')
+    platforms = url.find_all('strong')
+    available_platforms = ''
+    for i in range(len(platforms)):
+        available_platforms += platforms[i].text + ', '
+
+    available_platforms = available_platforms[:-2]
+    return rating, recommendation, game_title, game_image, available_platforms
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -90,42 +115,20 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     txt = get_rotten_tomatoes_rating(movie_name, movie_year)
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
-def get_igdb_rating(game_name):
-    results = wrapper.api_request(
-            'games',
-            'fields name, rating; offset 0; where name="Halo"*;',
-        )
-    print(results)
-    if results:
-        return 'A nota do IGDB para ' + game_name + ' é ' + str(results[0]['rating'])
-    else:
-        return 'Não encontrei ' + game_name
-
-def get_igdb_game_posters(game_name):
-    results = wrapper.api_request(
-            'games',
-            'fields name,cover.url; where name = halo;') 
-    if results:
-        return results[0]['cover']['url']
-    else:
-        return 'https://i.imgur.com/jfkRgwB.png'
-    
-
-def print_igdb_rating(update: Update, context: CallbackContext):
+def print_op_rating(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     print('text:', game_name)   # /start something
-    txt = get_igdb_rating(game_name)
-    print(txt)
-    update.message.reply_photo(get_igdb_game_posters(game_name), caption= str(txt))
-
-
+    game_info = get_op_info(get_op_page(game_name))
+    rating, recommendation, game_title, game_image, available_platforms = get_op_info(url)
+    txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
+    update.message.reply_photo(game_image, caption= str(txt))
 
 def main():
     updater = Updater(TOKEN,
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
-    updater.dispatcher.add_handler(CommandHandler('game', print_igdb_rating))
+    updater.dispatcher.add_handler(CommandHandler('game', print_op_rating))
     ##updater.dispatcher.add_handler(MessageHandler(Filters.text, echo))
     updater.dispatcher.add_error_handler(error)
 
