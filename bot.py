@@ -50,10 +50,9 @@ def get_op_info(url):
         rating = rating_text[0].text
         recommendation = rating_text[1].text
         game_title = url.find('h1').text
-        try:
-            game_image = url.find('img', {'alt' : game_title + ' header image'}).get('src')
-        except:
-            game_image = 'https://i.imgur.com/jfkRgwB.png'
+
+        game_image = url.find('img', {'alt' : game_title + ' header image'}).get('src')
+
         platforms = url.find_all('strong')
         available_platforms = ''
         for i in range(len(platforms)):
