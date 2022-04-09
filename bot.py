@@ -48,7 +48,11 @@ def get_op_page(game_name):
 def get_op_info(url):
     op_content = requests.get(url, headers = headers).text
     url = BeautifulSoup(op_content, 'html.parser')
-    if url.find('strong', {'text': re.compile('percentile')} ) is None:
+    if url.find('strong', {'text': re.compile('percentile')}):
+        print (url.find('strong', {'text': re.compile('percentile')}).text)
+        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
+
+    elif url.find('strong', {'text': re.compile('percentile')} ) is None:
         rating_text = url.find_all('div', class_ = 'inner-orb')
         rating = rating_text[0].text
         recommendation = rating_text[1].text
@@ -68,8 +72,7 @@ def get_op_info(url):
 
         available_platforms = available_platforms[:-2]
         return rating, recommendation, game_title, game_image, available_platforms
-    if url.find('strong', {'text': re.compile('percentile')}):
-        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
+
 
 def error(update, context):
     """Log Errors caused by Updates."""
