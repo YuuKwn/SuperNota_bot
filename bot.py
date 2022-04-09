@@ -116,8 +116,7 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
 def print_op_rating(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     print('text:', game_name)   # /start something
-    game_info = get_op_info(get_op_page(game_name))
-    rating, recommendation, game_title, game_image, available_platforms = get_op_info(url)
+    rating, recommendation, game_title, game_image, available_platforms = get_op_info(get_op_page(game_name))
     txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
     update.message.reply_photo(game_image, caption= str(txt))
 
