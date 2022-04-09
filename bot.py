@@ -46,17 +46,23 @@ def get_op_info(url):
     op_content = requests.get(url, headers = headers).text
     url = BeautifulSoup(op_content, 'html.parser')
     rating_text = url.find_all('div', class_ = 'inner-orb')
-    rating = rating_text[0].text
-    recommendation = rating_text[1].text
-    game_title = url.find('h1').text
-    game_image = url.find('img', {'alt' : game_title + ' header image'}).get('src')
-    platforms = url.find_all('strong')
-    available_platforms = ''
-    for i in range(len(platforms)):
-        available_platforms += platforms[i].text + ', '
+    if rating_text:
+        rating = rating_text[0].text
+        recommendation = rating_text[1].text
+        game_title = url.find('h1').text
+        try:
+            game_image = url.find('img', {'alt' : game_title + ' header image'}).get('src')
+        except:
+            game_image = 'https://i.imgur.com/jfkRgwB.png'
+        platforms = url.find_all('strong')
+        available_platforms = ''
+        for i in range(len(platforms)):
+            available_platforms += platforms[i].text + ', '
 
-    available_platforms = available_platforms[:-2]
-    return rating, recommendation, game_title, game_image, available_platforms
+        available_platforms = available_platforms[:-2]
+        return rating, recommendation, game_title, game_image, available_platforms
+    else:
+        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', '', ''
 
 def error(update, context):
     """Log Errors caused by Updates."""
