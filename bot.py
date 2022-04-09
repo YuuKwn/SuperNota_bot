@@ -68,7 +68,12 @@ def get_op_info(url):
         available_platforms = available_platforms[:-2]
         return rating, recommendation, game_title, game_image, available_platforms
     else:
-        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', '', ''
+        rating = 'Jogo não encontrado no banco de dados do OpenCritic'
+        recommendarion = ''
+        game_title = ''
+        game_image = 'https://i.imgur.com/jfkRgwB.png'
+        available_platforms = ''
+        return rating, recommendation, game_title, game_image, available_platforms
 
 def error(update, context):
     """Log Errors caused by Updates."""
