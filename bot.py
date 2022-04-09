@@ -93,7 +93,7 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
 def get_igdb_rating(game_name):
     results = wrapper.api_request(
             'games',
-            'fields name, rating; where name = halo;'
+            'fields name, rating; offset 0; where name="Halo";',
         )
     print(results)
     if results:
