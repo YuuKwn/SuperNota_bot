@@ -48,6 +48,7 @@ def get_op_page(game_name):
 def get_op_info(url):
     op_content = requests.get(url, headers = headers).text
     url = BeautifulSoup(op_content, 'html.parser')
+    print (url)
     if url.find('strong', {'text': re.compile('percentile')}):
         print (url.find('strong', {'text': re.compile('percentile')}).text)
         return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
@@ -57,7 +58,6 @@ def get_op_info(url):
         rating = rating_text[0].text
         recommendation = rating_text[1].text
         game_title = url.find('h1').text
-        print (game_title)
         game_image_element = url.find('img', {'alt' : game_title + ' header image'})
         if game_image_element is not None:
             game_image = game_image_element.get('src')
@@ -65,7 +65,6 @@ def get_op_info(url):
             game_image = 'https://i.imgur.com/jfkRgwB.png'
         
         platforms = url.find_all('strong')
-        print (platforms)
         available_platforms = ''
         for i in range(len(platforms)):
             available_platforms += platforms[i].text + ', '
