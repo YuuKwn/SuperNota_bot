@@ -53,7 +53,6 @@ def get_op_info(url):
         print (game_title)
 
         game_image_element = url.find('img', {'alt' : game_title + ' header image'})
-        print (game_image_element)
         if game_image_element is not None:
             game_image = game_image_element.get('src')
         else:
