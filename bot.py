@@ -88,8 +88,11 @@ def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
     data = json.loads(response.text)
     if data['Response'] == 'True' and data['Poster'] != 'N/A':
         return  data['Poster']
-    else:
+    elif data['Response'] == 'True' and data['Poster'] == 'N/A':
         return 'https://i.imgur.com/jfkRgwB.png'
+    else: 
+        return 'https://i.imgur.com/tss8ZcO.png'
+
 
 def get_rotten_tomatoes_rating(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + key
