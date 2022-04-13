@@ -71,7 +71,7 @@ def get_op_info(url):
             if game_image_element is not None:
                 game_image = game_image_element.get('src')
             else:
-                game_image = 'https://i.imgur.com/jfkRgwB.png'
+                game_image = 'https://i.imgur.com/RgTqosu.jpg'
             
             platforms = url.find_all('strong')
             available_platforms = ''
@@ -99,7 +99,7 @@ def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
     if data['Response'] == 'True' and data['Poster'] != 'N/A':
         return  data['Poster']
     elif data['Response'] == 'True' and data['Poster'] == 'N/A':
-        return 'https://i.imgur.com/jfkRgwB.png'
+        return 'https://i.imgur.com/7wlZlWi.jpg'
     else: 
         return 'https://i.imgur.com/tss8ZcO.png'
 
