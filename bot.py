@@ -58,7 +58,7 @@ def get_op_info(url):
     wrong = url.find('strong', text= re.compile('percentile'))
     if wrong is not None:    
         print ('true')
-        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
+        return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/2lFiGXm.png', ''
 
     elif wrong is None:
 
@@ -81,7 +81,7 @@ def get_op_info(url):
             available_platforms = available_platforms[:-2]
             return rating, recommendation, game_title, game_image, available_platforms
         else :
-            return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
+            return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/2lFiGXm.png', ''
 
 
 def error(update, context):
