@@ -36,25 +36,26 @@ headers = {
 }
 
 def get_op_page(game_name):
-    url = 'https://www.google.com/search?q=opencritic+' + game_name
+    url = 'https://www.google.com/search?q="open+critic"+' + game_name
     content = requests.get(url, headers = headers).text
     soup = BeautifulSoup(content, 'html.parser')
-    firstrating = soup.find('g-review-stars')
+    firstrating = soup.find('h3', {'text': re.compile('for')})
     if firstrating is None:
         return 'https://opencritic.com/game/3698/score/reviews'
-    first_link = firstrating.find_previous('a')
-    return first_link['href']
+    else:
+        first_link = firstrating.find_previous('a')
+        return first_link['href']
 
 def get_op_info(url):
     op_content = requests.get(url, headers = headers).text
     url = BeautifulSoup(op_content, 'html.parser')
 
-    if url.find('strong', {'text': re.compile('percentile')}):
+    wrong = url.find('strong', {'text': re.compile('percentile')})
+    if wrong is not None:    
         print ('true')
-        print (url.find('strong', {'text': re.compile('percentile')}).text)
         return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
 
-    elif url.find('strong', {'text': re.compile('percentile')} ) is None:
+    elif wrong is None:
         rating_text = url.find_all('div', class_ = 'inner-orb')
         rating = rating_text[0].text
         recommendation = rating_text[1].text
