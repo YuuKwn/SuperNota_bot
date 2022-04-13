@@ -61,23 +61,27 @@ def get_op_info(url):
         return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
 
     elif wrong is None:
-        rating_text = url.find_all('div', class_ = 'inner-orb')
-        rating = rating_text[0].text
-        recommendation = rating_text[1].text
-        game_title = url.find('h1').text
-        game_image_element = url.find('img', {'alt' : game_title + ' header image'})
-        if game_image_element is not None:
-            game_image = game_image_element.get('src')
-        else:
-            game_image = 'https://i.imgur.com/jfkRgwB.png'
-        
-        platforms = url.find_all('strong')
-        available_platforms = ''
-        for i in range(len(platforms)):
-            available_platforms += platforms[i].text + ', '
 
-        available_platforms = available_platforms[:-2]
-        return rating, recommendation, game_title, game_image, available_platforms
+        rating_text = url.find_all('div', class_ = 'inner-orb')
+        if len(rating_text) > 0:
+            rating = rating_text[0].text
+            recommendation = rating_text[1].text
+            game_title = url.find('h1').text
+            game_image_element = url.find('img', {'alt' : game_title + ' header image'})
+            if game_image_element is not None:
+                game_image = game_image_element.get('src')
+            else:
+                game_image = 'https://i.imgur.com/jfkRgwB.png'
+            
+            platforms = url.find_all('strong')
+            available_platforms = ''
+            for i in range(len(platforms)):
+                available_platforms += platforms[i].text + ', '
+
+            available_platforms = available_platforms[:-2]
+            return rating, recommendation, game_title, game_image, available_platforms
+        else :
+            return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/jfkRgwB.png', ''
 
 
 def error(update, context):
@@ -142,9 +146,12 @@ def print_op_rating(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     print('text:', game_name)   # /start something
     rating, recommendation, game_title, game_image, available_platforms = get_op_info(get_op_page(game_name))
-    available_platforms = available_platforms.replace(', Critic Consensus', '')
-    txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
-    update.message.reply_photo(game_image, caption= str(txt))
+    if rating == 'Jogo não encontrado no banco de dados do OpenCritic':
+        update.message.reply_photo(game_image, caption= str(rating))
+    else:
+        available_platforms = available_platforms.replace(', Critic Consensus', '')
+        txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
+        update.message.reply_photo(game_image, caption= str(txt))
 
 def main():
     updater = Updater(TOKEN,
