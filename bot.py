@@ -39,13 +39,17 @@ def get_op_page(game_name):
     url = 'https://www.google.com/search?q="open+critic"+' + game_name
     content = requests.get(url, headers = headers).text
     soup = BeautifulSoup(content, 'html.parser')
-    firstrating = soup.find('h3', text = re.compile('for'))
-    print(firstrating)
-    if firstrating is None:
+    hasOP = soup.find('h3', text = re.compile('OpenCritic'))
+    if hasOP is not None:
+        firstrating = soup.find('h3', text = re.compile('for'))
+        print(firstrating)
+        if firstrating is None:
+            return 'https://opencritic.com/game/3698/score/reviews'
+        else:
+            first_link = firstrating.find_previous('a')
+            return first_link['href']
+    else: 
         return 'https://opencritic.com/game/3698/score/reviews'
-    else:
-        first_link = firstrating.find_previous('a')
-        return first_link['href']
 
 def get_op_info(url):
     op_content = requests.get(url, headers = headers).text
