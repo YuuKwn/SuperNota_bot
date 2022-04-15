@@ -92,8 +92,10 @@ def get_op_info(url):
                 hltb_completionist = (best_element.gameplay_completionist + " " +best_element.gameplay_completionist_unit)  
                 hltb_completionist = hltb_completionist.replace('Hours', 'Horas')
                 hltb_completionist = hltb_completionist.replace('Mins', 'Minutos')
+                return rating, recommendation, game_title, game_image, available_platforms, hltb_main, hltb_extras, hltb_completionist
+            else:
 
-            return rating, recommendation, game_title, game_image, available_platforms, hltb_main, hltb_extras, hltb_completionist
+                return rating, recommendation, game_title, game_image, available_platforms, '', '', ''
         else :
             return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/2lFiGXm.png', '', '', '', ''
 
@@ -159,10 +161,15 @@ def print_op_rating(update: Update, context: CallbackContext):
     rating, recommendation, game_title, game_image, available_platforms, hltb_main, hltb_extras, hltb_complete = get_op_info(get_op_page(game_name))
     if rating == 'Jogo não encontrado no banco de dados do OpenCritic':
         update.message.reply_photo(game_image, caption= str(rating))
-    else:
+    elif available_platforms != '' and hltb_main != '':
         available_platforms = available_platforms.replace(', Critic Consensus', '')
-        txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms + '\n' + 'Tempo de jogo para completar o jogo: ' + hltb_main + '\n' + 'Tempo de jogo para completar o jogo com extras: ' + hltb_extras + '\n' + 'Tempo de jogo para terminar tudo do jogo: ' + hltb_complete)
+        txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms + '\n' + 'Tempo para completar o jogo: ' + hltb_main + '\n' + 'Tempo para completar o jogo com extras: ' + hltb_extras + '\n' + 'Tempo para terminar tudo do jogo: ' + hltb_complete)
         update.message.reply_photo(game_image, caption= str(txt))
+    elif available_platforms != '' and hltb_main == '':
+        available_platforms = available_platforms.replace(', Critic Consensus', '')
+        txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
+        update.message.reply_photo(game_image, caption= str(txt))
+
 
 def main():
     updater = Updater(TOKEN,
