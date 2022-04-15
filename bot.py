@@ -1,5 +1,4 @@
 """
-Ver. 1.0
 Telegram Bot to return the rating of a movie or game using the title
 Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
@@ -15,6 +14,8 @@ import requests, json
 import logging
 import os
 from bs4 import BeautifulSoup
+from howlongtobeatpy import HowLongToBeat
+
 
 
 
@@ -57,7 +58,6 @@ def get_op_info(url):
 
     wrong = url.find('strong', text= re.compile('percentile'))
     if wrong is not None:    
-        print ('true')
         return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/2lFiGXm.png', ''
 
     elif wrong is None:
@@ -79,7 +79,21 @@ def get_op_info(url):
                 available_platforms += platforms[i].text + ', '
 
             available_platforms = available_platforms[:-2]
-            return rating, recommendation, game_title, game_image, available_platforms
+
+            results_list = HowLongToBeat().search(game_title)
+            if results_list is not None and len(results_list) > 0:
+                best_element = max(results_list, key=lambda element: element.similarity)
+                hltb_main = (best_element.gameplay_main + " " +best_element.gameplay_main_unit)
+                hltb_main = hltb_main.replace('Hours', 'Horas')
+                hltb_main = hltb_main.replace('Mins', 'Minutos')
+                hltb_extras = (best_element.gameplay_main_extras + " " +best_element.gameplay_main_extras_unit)
+                hltb_extras = hltb_extras.replace('Hours', 'Horas')
+                hltb_extras = hltb_extras.replace('Mins', 'Minutos')
+                hltb_completionist = (best_element.gameplay_completionist + " " +best_element.gameplay_completionist_unit)  
+                hltb_completionist = hltb_completionist.replace('Hours', 'Horas')
+                hltb_completionist = hltb_completionist.replace('Mins', 'Minutos')
+
+            return rating, recommendation, game_title, game_image, available_platforms, hltb_main, hltb_extras, hltb_completionist
         else :
             return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/2lFiGXm.png', ''
 
@@ -137,20 +151,17 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     movie_year = ""
     if len(separate) > 1:
         movie_year = separate[1]
-    print('text:', movie_name)   # /start something
-    print('args:', movie_year)          # ['something']
     txt = get_rotten_tomatoes_rating(movie_name, movie_year)
     update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt))
 
 def print_op_rating(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
-    print('text:', game_name)   # /start something
-    rating, recommendation, game_title, game_image, available_platforms = get_op_info(get_op_page(game_name))
+    rating, recommendation, game_title, game_image, available_platforms, hltb_main, hltb_extras, hltb_complete = get_op_info(get_op_page(game_name))
     if rating == 'Jogo não encontrado no banco de dados do OpenCritic':
         update.message.reply_photo(game_image, caption= str(rating))
     else:
         available_platforms = available_platforms.replace(', Critic Consensus', '')
-        txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
+        txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms + '\n' + 'Tempo de jogo para completar o jogo: ' + hltb_main + '\n' + 'Tempo de jogo para completar o jogo com extras: ' + hltb_extras + '\n' + 'Tempo de jogo para terminar tudo do jogo: ' + hltb_complete)
         update.message.reply_photo(game_image, caption= str(txt))
 
 def main():
