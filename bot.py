@@ -86,7 +86,7 @@ def get_op_info(url):
                 hltb_main = (best_element.gameplay_main + " " +best_element.gameplay_main_unit)
                 hltb_main = hltb_main.replace('Hours', 'Horas')
                 hltb_main = hltb_main.replace('Mins', 'Minutos')
-                hltb_extras = (best_element.gameplay_main_extras + " " +best_element.gameplay_main_extras_unit)
+                hltb_extras = (best_element.gameplay_main_extra + " " +best_element.gameplay_main_extra_unit)
                 hltb_extras = hltb_extras.replace('Hours', 'Horas')
                 hltb_extras = hltb_extras.replace('Mins', 'Minutos')
                 hltb_completionist = (best_element.gameplay_completionist + " " +best_element.gameplay_completionist_unit)  
