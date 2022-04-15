@@ -90,14 +90,16 @@ def get_op_info(url):
                     hltb_main = hltb_main.replace('-1', 'N/A')
                 else: 
                     hltb_main = 'N/A'
-                if best_element.gameplay_main_extra is not None:
+
+                if best_element.gameplay_main_extra_unit is not None:
                     hltb_extras = (str(best_element.gameplay_main_extra) + " " +best_element.gameplay_main_extra_unit)
                     hltb_extras = hltb_extras.replace('Hours', 'Horas')
                     hltb_extras = hltb_extras.replace('Mins', 'Minutos')
                     hltb_extras = hltb_extras.replace('-1', 'N/A')
                 else: 
                     hltb_extras = 'N/A'
-                if best_element.gameplay_completionist is not None:
+
+                if best_element.gameplay_completionist_unit is not None:
                     hltb_completionist = (str(best_element.gameplay_completionist) + " " +best_element.gameplay_completionist_unit)  
                     hltb_completionist = hltb_completionist.replace('Hours', 'Horas')
                     hltb_completionist = hltb_completionist.replace('Mins', 'Minutos')
