@@ -166,23 +166,28 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
             if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
 
                 txt = ('Título: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-                return re.escape(txt)
+                txt_escaped = re.escape(txt)
+                return txt_escaped.replace('\|\|', '||')
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Internet Movie Database':
                 rating_source = 'IMDB'
                 txt = ('Título: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-                return re.escape(txt)
+                txt_escaped = re.escape(txt)
+                return txt_escaped.replace('\|\|', '||')
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Metacritic':
                 rating_source = 'Metacritic'
                 txt = ('Título: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-                return re.escape(txt)
+                txt_escaped = re.escape(txt)
+                return txt_escaped.replace('\|\|', '||')
         else:
             txt = ('Título: ' + data['Title'] + '\n' + 'Nota: N/A' +'\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-            return re.escape(txt)
+            txt_escaped = re.escape(txt)
+            return txt_escaped.replace('\|\|', '||')
     else:
         txt = ('Não encontrei ' + movie_name)
-        return re.escape(txt)
+        txt_escaped = re.escape(txt)
+        return txt_escaped.replace('\|\|', '||')
 
 
 def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
