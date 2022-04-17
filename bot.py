@@ -15,8 +15,9 @@ import logging
 import os
 from bs4 import BeautifulSoup
 from howlongtobeatpy import HowLongToBeat
+from translate import Translator
 
-
+t = Translator(to_lang="pt-BR")
 
 
 PORT = int(os.environ.get('PORT', 8443))
@@ -36,7 +37,9 @@ headers = {
 	'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82',
 }
 
+
 def get_op_page(game_name):
+    #Make a google search with the game name provided by the user, get parse the results and grab the link of the first valid OpenCritic page.
     url = 'https://www.google.com/search?q="open+critic"+' + game_name
     content = requests.get(url, headers = headers).text
     soup = BeautifulSoup(content, 'html.parser')
@@ -53,13 +56,16 @@ def get_op_page(game_name):
         return 'https://opencritic.com/game/3698/score/reviews'
 
 def get_op_info(url):
+    # Get the OpenCritic page of the game and parse the information
     op_content = requests.get(url, headers = headers).text
     url = BeautifulSoup(op_content, 'html.parser')
 
+    #if the page is not a valid OpenCritic page, return a message
     wrong = url.find('strong', text= re.compile('percentile'))
     if wrong is not None:    
         return 'Jogo não encontrado no banco de dados do OpenCritic', '', '', 'https://i.imgur.com/2lFiGXm.png', '', '', '', ''
 
+    #If the page is a valid OpenCritic page, get the information
     elif wrong is None:
 
         rating_text = url.find_all('div', class_ = 'inner-orb')
@@ -80,6 +86,7 @@ def get_op_info(url):
 
             available_platforms = available_platforms[:-2]
 
+            #Based on the game name, get HowLongToBeat's information
             results_list = HowLongToBeat().search(game_title)
             if results_list is not None and len(results_list) > 0:
                 best_element = max(results_list, key=lambda element: element.similarity)
@@ -123,7 +130,9 @@ def error(update, context):
 def start(update: Update, context: CallbackContext):
     update.message.reply_text('fala fi')
 
+
 def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
+    #Get the movie posters from omdb if the movie is found in the database
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + key
     response = requests.get(url)
     data = json.loads(response.text)
@@ -139,22 +148,33 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + key
     response = requests.get(url)
     data = json.loads(response.text)
+    rating_source = 'Rotten Tomatoes'
 
     if data['Response'] == 'True':
+        released = data['Released']
+        released = t.translate(released)
+        country = data['Country']
+        country = t.translate(country)
+        plot = data['Plot']
+        plot = t.translate(plot)
+
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
-                txt = ('A nota do Rotten Tomatoes para ' + data['Title'] + ' é ' + data['Ratings'][i]['Value'])
+
+                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
                 return txt
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Internet Movie Database':
-                txt = ('A nota do IMDb para ' + data['Title'] + ' é ' + data['Ratings'][i]['Value'])
+                rating_source = 'IMDB'
+                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
                 return txt
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Metacritic':
-                txt = ('A nota do Metacritic para ' + data['Title'] + ' é ' + data['Ratings'][i]['Value'])
+                rating_source = 'Metacritic'
+                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
                 return txt
         else:
-            txt = ('Não encontrei nenhuma nota para ' + data['Title'])
+            txt = ('Filme: ' + data['Title'] + '\n' + 'Nota: N/A' +'\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
             return txt
     else:
         txt = ('Não encontrei ' + movie_name)
@@ -176,10 +196,12 @@ def print_op_rating(update: Update, context: CallbackContext):
     rating, recommendation, game_title, game_image, available_platforms, hltb_main, hltb_extras, hltb_complete = get_op_info(get_op_page(game_name))
     if rating == 'Jogo não encontrado no banco de dados do OpenCritic':
         update.message.reply_photo(game_image, caption= str(rating))
+
     elif available_platforms != '' and hltb_main != '':
         available_platforms = available_platforms.replace(', Critic Consensus', '')
         txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms + '\n' + 'Tempo para completar o jogo: ' + hltb_main + '\n' + 'Tempo para completar o jogo com extras: ' + hltb_extras + '\n' + 'Tempo para terminar tudo do jogo: ' + hltb_complete)
         update.message.reply_photo(game_image, caption= str(txt))
+
     elif available_platforms != '' and hltb_main == '':
         available_platforms = available_platforms.replace(', Critic Consensus', '')
         txt = ('Jogo: ' + game_title + '\n' + 'Média do OpenCritic: ' + rating + '\n' + 'Porcentagem de recomendação da crítica: ' + recommendation + '\n' + 'Plataformas Disponiveis: ' + available_platforms)
