@@ -157,29 +157,32 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         country = t.translate(country)
         plot = data['Plot']
         plot = t.translate(plot)
+        try:
+            box_office = data['boxOffice']
+        except KeyError:
+            box_office = 'N/A'
 
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
 
-                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
+                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ' + plot)
                 return txt
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Internet Movie Database':
                 rating_source = 'IMDB'
-                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
+                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ' + plot)
                 return txt
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Metacritic':
                 rating_source = 'Metacritic'
-                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
+                txt = ('Filme: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ' + plot)
                 return txt
         else:
-            txt = ('Filme: ' + data['Title'] + '\n' + 'Nota: N/A' +'\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + data['BoxOffice'] + '\n' +'Sinopse: ' + plot)
+            txt = ('Filme: ' + data['Title'] + '\n' + 'Nota: N/A' +'\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ' + plot)
             return txt
     else:
         txt = ('Não encontrei ' + movie_name)
         return txt
-
 
 
 def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
