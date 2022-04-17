@@ -192,7 +192,7 @@ def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
     if len(separate) > 1:
         movie_year = separate[1]
     txt = get_rotten_tomatoes_rating(movie_name, movie_year)
-    update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt), parse_mode='MARKDOWN_V2')
+    update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt), parse_mode="MARKDOWNV2")
 
 def print_op_rating(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
