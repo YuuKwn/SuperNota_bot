@@ -219,10 +219,13 @@ def print_op_rating(update: Update, context: CallbackContext):
 def pizza(update: Update, context: CallbackContext):
     update.message.reply_photo('https://i.imgur.com/VUEGlFp.jpeg', caption='Pizza!!')
 
+def pudim(update: Update, context: CallbackContext):
+    update.message.reply_photo('https://vivareceita-cdn.s3.amazonaws.com/uploads/2021/04/Aprenda-como-fazer-pudim-de-leite-condensado-simples.-Fonte-Brazilian-Kitchen-Abroad.jpg', caption='Pudim!!')
 def main():
     updater = Updater(TOKEN,
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('pizza', pizza))
+    updater.dispatcher.add_handler(CommandHandler('pudim', pudim))
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
     updater.dispatcher.add_handler(CommandHandler('game', print_op_rating))
