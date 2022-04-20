@@ -216,9 +216,13 @@ def print_op_rating(update: Update, context: CallbackContext):
         update.message.reply_photo(game_image, caption= str(txt))
 
 
+def pizza(update: Update, context: CallbackContext):
+    update.message.reply_photo('https://i.imgur.com/VUEGlFp.jpeg', caption='Pizza!!')
+
 def main():
     updater = Updater(TOKEN,
                   use_context=True)
+    updater.dispatcher.add_handler(CommandHandler('pizza', pizza))
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
     updater.dispatcher.add_handler(CommandHandler('game', print_op_rating))
