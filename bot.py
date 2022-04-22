@@ -221,6 +221,7 @@ def pizza(update: Update, context: CallbackContext):
 
 def pudim(update: Update, context: CallbackContext):
     update.message.reply_photo('https://vivareceita-cdn.s3.amazonaws.com/uploads/2021/04/Aprenda-como-fazer-pudim-de-leite-condensado-simples.-Fonte-Brazilian-Kitchen-Abroad.jpg', caption='Pudim!!')
+
 def main():
     updater = Updater(TOKEN,
                   use_context=True)
