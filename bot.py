@@ -128,7 +128,7 @@ def error(update, context):
 
 
 def start(update: Update, context: CallbackContext):
-    update.message.reply_text('fala fi')
+    update.message.reply_text('fala fiote')
 
 
 def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
