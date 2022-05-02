@@ -28,8 +28,9 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 key = 'd87fbf5f'
-movieExists = False
 TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
+
+movieExists = False
 
 headers = {
 	'Accept' : '*/*',
