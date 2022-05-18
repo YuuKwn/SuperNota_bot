@@ -50,7 +50,7 @@ def get_igdb_game_info(game_name):
     game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=1&search="+game_name+"&where=parent_game=null", headers=headers)
     game_info = game_info.json()
     if game_info == []:
-        return 'Game not found', '', '', 'https://i.imgur.com/2lFiGXm.png', '', '', '', ''
+        return 'Game not found', 'https://i.imgur.com/2lFiGXm.png', '', '', '', '', '', ''
     elif game_info != []:    
         try:
             game_title = game_info[0]['name']
@@ -117,7 +117,7 @@ def get_igdb_game_info(game_name):
 
                 return game_title, game_image, game_critic_rating, game_user_rating, game_release_date, game_genres_names, game_platforms_names, 'N/A', 'N/A', 'N/A'
         except:
-            return 'Deu um ruim inesperado', '', '', '', '', '', '', '', '', ''
+            return 'Deu um ruim inesperado', 'https://c.tenor.com/14hr1KPxcCoAAAAC/community-donald-glover.gif', '', '', '', '', '', '', '', ''
 
 
 def print_igdb_info(update: Update, context: CallbackContext):
