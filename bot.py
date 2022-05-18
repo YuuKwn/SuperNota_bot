@@ -225,7 +225,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('pudim', pudim))
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
-    updater.dispatcher.add_handler(CommandHandler('game', print_op_rating))
+    updater.dispatcher.add_handler(CommandHandler('game', print_igdb_info))
     ##updater.dispatcher.add_handler(MessageHandler(Filters.text, echo))
     updater.dispatcher.add_error_handler(error)
 
