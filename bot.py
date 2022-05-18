@@ -57,6 +57,9 @@ def get_igdb_game_info(game_name):
 
             try:
                 game_image = game_info[0]['cover']['url']
+                game_image = game_image.replace('t_thumb', 't_cover_big')
+                game_image = game_image.replace('//', 'https://')
+                
             except:
                 game_image = 'https://i.imgur.com/RgTqosu.jpg'
             try:
