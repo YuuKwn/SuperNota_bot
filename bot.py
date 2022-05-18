@@ -93,18 +93,21 @@ def get_igdb_game_info(game_name):
                 best_element = results_list[0]
                 if best_element.gameplay_main_unit is not None:       
                     hltb_main = (str(best_element.gameplay_main) + " " +best_element.gameplay_main_unit)
+
                     hltb_main = hltb_main.replace('-1', 'N/A')
                 else: 
                     hltb_main = 'N/A'
 
                 if best_element.gameplay_main_extra_unit is not None:
                     hltb_extras = (str(best_element.gameplay_main_extra) + " " +best_element.gameplay_main_extra_unit)
+
                     hltb_extras = hltb_extras.replace('-1', 'N/A')
                 else: 
                     hltb_extras = 'N/A'
 
                 if best_element.gameplay_completionist_unit is not None:
                     hltb_completionist = (str(best_element.gameplay_completionist) + " " +best_element.gameplay_completionist_unit)  
+
                     hltb_completionist = hltb_completionist.replace('-1', 'N/A')
                 else: 
                     hltb_completionist = 'N/A'
@@ -120,11 +123,11 @@ def get_igdb_game_info(game_name):
 def print_igdb_info(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     game_title, game_image, game_critic_rating, game_user_rating, game_release_date, game_genres_names, game_platforms_names, hltb_main, hltb_extras, hltb_completionist = get_igdb_game_info(game_name)
-    if game_title == 'Jogo não encontrado' or game_title == 'Deu um ruim inesperado':
+    if game_title == 'Game not found' or game_title == 'Deu um ruim inesperado':
         update.message.reply_photo(game_image, caption= str(game_title))
 
     else:
-        txt = ('Jogo: ' + game_title + '\n' + 'Nota agregada da Crítica: ' + game_critic_rating + '\n' + 'Nota agregada dos Usuários: ' + game_user_rating + '\n' + 'Plataformas: ' + game_platforms_names + '\n' + 'Lançamento Inicial: ' + game_release_date + '\n' + 'Gêneros: ' + game_genres_names+ '\n' + 'Tempo para terminar: ' + hltb_main + '\n' + 'Tempo para terminar + extras: ' + hltb_extras + '\n' + 'Tempo pra terminar tudo: ' + hltb_completionist)
+        txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
         update.message.reply_photo(game_image, caption= str(txt))
 
 
