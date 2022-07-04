@@ -37,6 +37,7 @@ BOT_TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
 igdb_client_id = 'rb28wttfszwg5kki1baracnzlki67z'
 igdb_secret = 'wicf4p0pq1p76nexptfpxdopvp9tx2'
 
+#Get Game info from IGDB
 def get_igdb_game_info(game_name):
     
     response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+igdb_client_id+"&client_secret="+igdb_secret+"&grant_type=client_credentials")
@@ -119,7 +120,7 @@ def get_igdb_game_info(game_name):
         except:
             return 'Deu um ruim inesperado', 'https://c.tenor.com/14hr1KPxcCoAAAAC/community-donald-glover.gif', '', '', '', '', '', '', '', ''
 
-
+#Generate variable with Game info
 def print_igdb_info(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     game_title, game_image, game_critic_rating, game_user_rating, game_release_date, game_genres_names, game_platforms_names, hltb_main, hltb_extras, hltb_completionist = get_igdb_game_info(game_name)
@@ -130,15 +131,7 @@ def print_igdb_info(update: Update, context: CallbackContext):
         txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
         update.message.reply_photo(game_image, caption= str(txt))
 
-
-
-
-def start(update: Update, context: CallbackContext):
-    update.message.reply_text('fala fiote')
-
-
 #Get Movie Info
-
 def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
     #Get the movie posters from omdb if the movie is found in the database
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
@@ -212,21 +205,12 @@ def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
-def pizza(update: Update, context: CallbackContext):
-    update.message.reply_photo('https://i.imgur.com/VUEGlFp.jpeg', caption='Pizza!!')
-
-def pudim(update: Update, context: CallbackContext):
-    update.message.reply_photo('https://vivareceita-cdn.s3.amazonaws.com/uploads/2021/04/Aprenda-como-fazer-pudim-de-leite-condensado-simples.-Fonte-Brazilian-Kitchen-Abroad.jpg', caption='Pudim!!')
-
 def main():
     updater = Updater(BOT_TOKEN,
                   use_context=True)
-    updater.dispatcher.add_handler(CommandHandler('pizza', pizza))
-    updater.dispatcher.add_handler(CommandHandler('pudim', pudim))
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
     updater.dispatcher.add_handler(CommandHandler('game', print_igdb_info))
-    ##updater.dispatcher.add_handler(MessageHandler(Filters.text, echo))
     updater.dispatcher.add_error_handler(error)
 
 
