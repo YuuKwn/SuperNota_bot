@@ -164,6 +164,8 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         except KeyError:
             box_office = 'N/A'
 
+        print('ok')
+
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
                 rotten_rating = data['Ratings'][i]['Value']
@@ -177,7 +179,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         return txt_escaped.replace('\|\|', '||')
 
     except:
-        txt = ('Não encontrei ' + movie_name)
+        txt = ('Não encontrei ' + movie_name + 'ou tive problemas para puxar as informações')
         txt_escaped = re.escape(txt)
         return txt_escaped.replace('\|\|', '||')
 
