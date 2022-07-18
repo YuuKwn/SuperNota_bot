@@ -150,6 +150,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
     response = requests.get(url)
     data = json.loads(response.text)
     rating_source = 'Rotten Tomatoes'
+    rotten_rating, imdb_rating, meta_rating = 'N/A'
 
     if data['Response'] == 'True':
         released = data['Released']
@@ -165,26 +166,16 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
 
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
-
-                txt = ('Título: ' + data['Title'] + '\n' + 'Porcentagem no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-                txt_escaped = re.escape(txt)
-                return txt_escaped.replace('\|\|', '||')
-        for i in range(len(data['Ratings'])):
+                rotten_rating = data['Ratings'][i]['Value']
             if data['Ratings'][i]['Source'] == 'Internet Movie Database':
-                rating_source = 'IMDB'
-                txt = ('Título: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-                txt_escaped = re.escape(txt)
-                return txt_escaped.replace('\|\|', '||')
-        for i in range(len(data['Ratings'])):
+                imdb_rating = data['Ratings'][i]['Value']
             if data['Ratings'][i]['Source'] == 'Metacritic':
-                rating_source = 'Metacritic'
-                txt = ('Título: ' + data['Title'] + '\n' + 'Nota no '+rating_source + ': ' + data['Ratings'][i]['Value'] + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-                txt_escaped = re.escape(txt)
-                return txt_escaped.replace('\|\|', '||')
-        else:
-            txt = ('Título: ' + data['Title'] + '\n' + 'Nota: N/A' +'\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
-            txt_escaped = re.escape(txt)
-            return txt_escaped.replace('\|\|', '||')
+                meta_rating = data['Ratings'][i]['Value']
+
+        txt =  ('Título: ' + data['Title'] + '\n' + 'Porcentagem no Rotten Tomatoes: ' + rotten_rating + '\n' 'Média no IMDB: ' + imdb_rating + '\n' 'Média no Metacritic: ' + meta_rating + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
+        txt_escaped = re.escape(txt)
+        return txt_escaped.replace('\|\|', '||')
+        
     else:
         txt = ('Não encontrei ' + movie_name)
         txt_escaped = re.escape(txt)
