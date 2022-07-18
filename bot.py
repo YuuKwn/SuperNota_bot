@@ -149,6 +149,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
     response = requests.get(url)
     data = json.loads(response.text)
+    print(data)
     rotten_rating, imdb_rating, meta_rating = 'N/A'
 
     try:
