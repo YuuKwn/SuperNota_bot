@@ -154,11 +154,8 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
 
     try:
         released = data['Released']
-        released = t.translate(released)
         country = data['Country']
-        country = t.translate(country)
         plot = data['Plot']
-        plot = t.translate(plot)
         try:
             box_office = data['boxOffice']
         except KeyError:
@@ -179,7 +176,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         return txt_escaped.replace('\|\|', '||')
 
     except:
-        txt = ('Não encontrei ' + movie_name + 'ou tive problemas para puxar as informações')
+        txt = ('Não encontrei ' + movie_name + ' ou tive problemas para encontrar as informações')
         txt_escaped = re.escape(txt)
         return txt_escaped.replace('\|\|', '||')
 
