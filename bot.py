@@ -169,6 +169,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
                 meta_rating = data['Ratings'][i]['Value']
 
         txt =  ('**Title:** ' + data['Title'] + '\n' + '**Rotten Tomatoes Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + data['Director'] + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' +'**Plot:** ||' + plot + '||')
+        print (txt)
         txt_escaped = re.escape(txt)
         txt_escaped = txt_escaped.replace('\*\*\\', '**')
         txt_escaped = txt_escaped.replace('\*\*', '**')
