@@ -173,6 +173,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         txt_escaped = txt_escaped.replace('\*\*\\', '**')
         txt_escaped = txt_escaped.replace('\*\*', '**')
         txt_escaped = txt_escaped.replace('\|\|', '||')
+        print(txt_escaped)
         return txt_escaped
 
     except:
