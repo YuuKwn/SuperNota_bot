@@ -170,8 +170,10 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
 
         txt =  ('**Title:** ' + data['Title'] + '\n' + '**Rotten Tomatoes Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + data['Director'] + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' +'**Plot:** ||' + plot + '||')
         txt_escaped = re.escape(txt)
+        txt_escaped = txt_escaped.replace('\*\*\\', '**')
         txt_escaped = txt_escaped.replace('\*\*', '**')
-        return txt_escaped.replace('\|\|', '||')
+        txt_escaped = txt_escaped.replace('\|\|', '||')
+        return txt_escaped
 
     except:
         txt = (movie_name + 'not found')
