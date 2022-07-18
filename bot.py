@@ -149,10 +149,9 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
     response = requests.get(url)
     data = json.loads(response.text)
-    rating_source = 'Rotten Tomatoes'
     rotten_rating, imdb_rating, meta_rating = 'N/A'
 
-    if data['Response'] == 'True':
+    try:
         released = data['Released']
         released = t.translate(released)
         country = data['Country']
@@ -175,8 +174,8 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         txt =  ('Título: ' + data['Title'] + '\n' + 'Porcentagem no Rotten Tomatoes: ' + rotten_rating + '\n' 'Média no IMDB: ' + imdb_rating + '\n' 'Média no Metacritic: ' + meta_rating + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
         txt_escaped = re.escape(txt)
         return txt_escaped.replace('\|\|', '||')
-        
-    else:
+
+    except:
         txt = ('Não encontrei ' + movie_name)
         txt_escaped = re.escape(txt)
         return txt_escaped.replace('\|\|', '||')
