@@ -149,7 +149,6 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
     response = requests.get(url)
     data = json.loads(response.text)
-    print(data)
     rotten_rating, imdb_rating, meta_rating = 'N/A'
 
     try:
@@ -161,8 +160,6 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
         except KeyError:
             box_office = 'N/A'
 
-        print('ok')
-
         for i in range(len(data['Ratings'])):
             if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
                 rotten_rating = data['Ratings'][i]['Value']
@@ -171,12 +168,12 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
             if data['Ratings'][i]['Source'] == 'Metacritic':
                 meta_rating = data['Ratings'][i]['Value']
 
-        txt =  ('Título: ' + data['Title'] + '\n' + 'Porcentagem no Rotten Tomatoes: ' + rotten_rating + '\n' 'Média no IMDB: ' + imdb_rating + '\n' 'Média no Metacritic: ' + meta_rating + '\n' + 'Lançado: ' + released + '\n' + 'Diretor: ' + data['Director'] + '\n' +  'País: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Sinopse: ||' + plot + '||')
+        txt =  ('Title: ' + data['Title'] + '\n' + 'Rotten Tomatoes Recommendation %: ' + rotten_rating + '\n' 'IMDB User Rating Avg.: ' + imdb_rating + '\n' 'Metacritic Avg.: ' + meta_rating + '\n' + 'Released: ' + released + '\n' + 'Director: ' + data['Director'] + '\n' +  'Country: ' + country + '\n' + 'Box Office: ' + box_office + '\n' +'Plot: ||' + plot + '||')
         txt_escaped = re.escape(txt)
         return txt_escaped.replace('\|\|', '||')
 
     except:
-        txt = ('Não encontrei ' + movie_name + ' ou tive problemas para encontrar as informações')
+        txt = (movie_name + 'not found')
         txt_escaped = re.escape(txt)
         return txt_escaped.replace('\|\|', '||')
 
