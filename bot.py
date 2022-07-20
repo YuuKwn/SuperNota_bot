@@ -133,7 +133,7 @@ def print_igdb_info(update: Update, context: CallbackContext):
 def messageHandler(update:Update, context: CallbackContext):
    if update.message.text:
         context.bot.send_message(chat_id = update.effective_chat.id, text='Got it', reply_markup=ReplyKeyboardRemove())
-        
+        if update.message.text == d['option_0'][0]
 
 def get_results(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
@@ -141,7 +141,7 @@ def get_results(update: Update, context: CallbackContext):
     movie_year = ""
     if len(separate) > 1:
         movie_year = separate[1]
-    url = 'http://www.omdbapi.com/?s=' + 'naruto' + '&y='+'&apikey=' + 'd87fbf5f'
+    url = 'http://www.omdbapi.com/?s=' + movie_name + '&y='+ movie_year+'&apikey=' + 'd87fbf5f'
     response = requests.get(url)
     data = json.loads(response.text)
     if data['Response'] == 'True':
@@ -154,19 +154,17 @@ def get_results(update: Update, context: CallbackContext):
         #context.bot.send_message(chat_id=update.effective_chat.id, reply_to_message_id=update.effective_chat.id ,text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
         update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
 
-
-
     elif len(data['Search']) == 3:
         for i in range(3):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])]]
-        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons))
+        update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
 
     elif len(data['Search']) == 2:
         for i in range(2):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])]]
-        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons))
+        update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
 
     elif len(data['Search']) == 1:
         for i in range(1):
