@@ -182,19 +182,19 @@ def messageHandler(update:Update, context: CallbackContext):
    if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
-        if update.message.text == d['option_0'][0] + ', '+ d['option_0'][2] :
+        if update.message.text == '1.'+d['option_0'][0] + ', '+ d['option_0'][2] :
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if update.message.text == d['option_1'][0] + ', '+ d['option_1'][2]:
+        if update.message.text == '2.'+d['option_1'][0] + ', '+ d['option_1'][2]:
             txt, poster = get_rotten_tomatoes_rating(d['option_1'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if update.message.text == d['option_2'][0] + ', '+ d['option_2'][2]:
+        if update.message.text == '3.'+d['option_2'][0] + ', '+ d['option_2'][2]:
             txt, poster = get_rotten_tomatoes_rating(d['option_2'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if update.message.text == d['option_3'][0] + ', '+ d['option_3'][2]:
+        if update.message.text == '4.'+d['option_3'][0] + ', '+ d['option_3'][2]:
             txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
