@@ -4,7 +4,7 @@ Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
 from telegram.ext.updater import Updater
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
@@ -151,7 +151,9 @@ def get_results(update: Update, context: CallbackContext):
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])], [KeyboardButton(d['option_3'][0])]]
         #context.bot.send_message(chat_id=update.effective_chat.id, reply_to_message_id=update.effective_chat.id ,text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
         update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
-        
+        update.message.reply_text(text='Pick one', reply_markup= ReplyKeyboardRemove)
+
+
 
     elif len(data['Search']) == 3:
         for i in range(3):
