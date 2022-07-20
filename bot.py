@@ -163,15 +163,12 @@ def get_rotten_tomatoes_ratingg(movie_name):
             if data['Ratings'][i]['Source'] == 'Metacritic':
                 meta_rating = data['Ratings'][i]['Value']
 
-        print('ok')
 
         txt =  ('**Title:** ' + title + '\n' + '**RT Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
-        print (txt)
         txt_escaped = re.escape(txt)
         txt_escaped = txt_escaped.replace('\*\*\\', '**')
         txt_escaped = txt_escaped.replace('\*\*', '**')
         txt_escaped = txt_escaped.replace('\|\|', '||')
-        print(txt_escaped)
         return txt_escaped, poster
 
     except:
@@ -183,7 +180,7 @@ def get_rotten_tomatoes_ratingg(movie_name):
 def messageHandler(update:Update, context: CallbackContext):
    if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
-        reply.delete
+        reply.delete()
         if update.message.text == d['option_0'][0]:
             txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
