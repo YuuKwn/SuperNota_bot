@@ -183,6 +183,7 @@ def messageHandler(update:Update, context: CallbackContext):
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
         if update.message.text == '1.'+d['option_0'][0] + ', '+ d['option_0'][2] :
+            print('222')
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
