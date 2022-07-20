@@ -184,6 +184,7 @@ def messageHandler(update:Update, context: CallbackContext):
         reply.delete()
         print('iriri')
         if update.message.text == d['option_0'][0] + d['option_0'][2] :
+            print('iriir2')
             txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
         if update.message.text == d['option_1'][0] + d['option_0'][2]:
