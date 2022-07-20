@@ -149,7 +149,8 @@ def get_results(update: Update, context: CallbackContext):
         for i in range(4):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])], [KeyboardButton(d['option_3'][0])]]
-        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons))
+        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+
     elif len(data['Search']) == 3:
         for i in range(3):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
