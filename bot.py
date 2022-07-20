@@ -133,7 +133,7 @@ def print_igdb_info(update: Update, context: CallbackContext):
 
 
 #Get rating and other infos
-def get_rotten_tomatoes_ratingg(movie_name):
+def get_rotten_tomatoes_rating(movie_name):
     url = 'http://www.omdbapi.com/?i=' + movie_name+ '&apikey=' + omdb_api_key
     response = requests.get(url)
     data = json.loads(response.text)
@@ -183,19 +183,19 @@ def messageHandler(update:Update, context: CallbackContext):
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
         if update.message.text == d['option_0'][0] + ', '+ d['option_0'][2] :
-            txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
+            txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == d['option_1'][0] + ', '+ d['option_1'][2]:
-            txt, poster = get_rotten_tomatoes_ratingg(d['option_1'][1])
+            txt, poster = get_rotten_tomatoes_rating(d['option_1'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == d['option_2'][0] + ', '+ d['option_2'][2]:
-            txt, poster = get_rotten_tomatoes_ratingg(d['option_2'][1])
+            txt, poster = get_rotten_tomatoes_rating(d['option_2'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == d['option_3'][0] + ', '+ d['option_3'][2]:
-            txt, poster = get_rotten_tomatoes_ratingg(d['option_3'][1])
+            txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
 def get_results(update: Update, context: CallbackContext):
@@ -235,87 +235,8 @@ def get_results(update: Update, context: CallbackContext):
     elif len(data['Search']) == 1:
         for i in range(1):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
-        txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
+        txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
         update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
-        
-
-
-        
-
-
-    #txt = get_rotten_tomatoes_rating(movie_name, movie_year)
-    #update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt), parse_mode="MARKDOWNV2")
-
-            
-    
-
-#Get Movie Info
-def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
-    #Get the movie posters from omdb if the movie is found in the database
-    url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
-    response = requests.get(url)
-    data = json.loads(response.text)
-    if data['Response'] == 'True' and data['Poster'] != 'N/A':
-        return  data['Poster']
-    elif data['Response'] == 'True' and data['Poster'] == 'N/A':
-        return 'https://i.imgur.com/7wlZlWi.jpg'
-    else: 
-        return 'https://i.imgur.com/tss8ZcO.png'
-
-#Get rating and other infos
-def get_rotten_tomatoes_rating(movie_name, movie_year):
-    url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
-    response = requests.get(url)
-    data = json.loads(response.text)
-    rotten_rating = 'Not Found'
-    imdb_rating = 'Not Found'
-    meta_rating = 'Not Found'
-
-    try:
-        title = data['Title']
-        released = data['Released']
-        country = data['Country']
-        plot = data['Plot']
-        director = data['Director']
-        try:
-            box_office = data['boxOffice']
-        except KeyError:
-            box_office = 'N/A'
-
-        for i in range(len(data['Ratings'])):
-            if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
-                rotten_rating = data['Ratings'][i]['Value']
-            if data['Ratings'][i]['Source'] == 'Internet Movie Database':
-                imdb_rating = data['Ratings'][i]['Value']
-            if data['Ratings'][i]['Source'] == 'Metacritic':
-                meta_rating = data['Ratings'][i]['Value']
-
-        print('ok')
-
-        txt =  ('**Title:** ' + title + '\n' + '**R Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
-        print (txt)
-        txt_escaped = re.escape(txt)
-        txt_escaped = txt_escaped.replace('\*\*\\', '**')
-        txt_escaped = txt_escaped.replace('\*\*', '**')
-        txt_escaped = txt_escaped.replace('\|\|', '||')
-        print(txt_escaped)
-        return txt_escaped
-
-    except:
-        txt = (movie_name + 'not found')
-        txt_escaped = re.escape(txt)
-        return txt_escaped.replace('\|\|', '||')
-
-
-def print_rotten_tomatoes_rating(update: Update, context: CallbackContext):
-    separate = " ".join(context.args).split(",")
-    movie_name = separate[0]
-    movie_year = ""
-    if len(separate) > 1:
-        movie_year = separate[1]
-    txt = get_rotten_tomatoes_rating(movie_name, movie_year)
-    update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt), parse_mode="MARKDOWNV2")
-
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -324,7 +245,7 @@ def error(update, context):
 def main():
     updater = Updater(BOT_TOKEN,
                   use_context=True)
-    updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
+    updater.dispatcher.add_handler(CommandHandler('nota', get_results))
     updater.dispatcher.add_handler(CommandHandler('game', print_igdb_info))
     updater.dispatcher.add_handler(CommandHandler('test', get_results))
 
