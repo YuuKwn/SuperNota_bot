@@ -261,7 +261,7 @@ def main():
     updater.dispatcher.add_handler(CommandHandler('test', get_results))
 
     updater.dispatcher.add_error_handler(error)
-
+    updater.dispatcher.add_handler(MessageHandler(Filters.text, messageHandler))
 
 
     updater.start_webhook(listen="0.0.0.0",
