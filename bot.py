@@ -4,15 +4,13 @@ Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
 from telegram.ext.updater import Updater
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
 from telegram.ext.messagehandler import MessageHandler
 from telegram.ext.filters import Filters
-import re
-import requests, json
-import logging
-import os
+import re, requests, json, logging, os
 from bs4 import BeautifulSoup
 from howlongtobeatpy import HowLongToBeat
 from translate import Translator
@@ -131,6 +129,53 @@ def print_igdb_info(update: Update, context: CallbackContext):
         txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
         update.message.reply_photo(game_image, caption= str(txt))
 
+
+#def messageHandler(update:Update, context: CallbackContext):
+ #   if 
+
+def get_results(update: Update, context: CallbackContext):
+    separate = " ".join(context.args).split(",")
+    movie_name = separate[0]
+    movie_year = ""
+    if len(separate) > 1:
+        movie_year = separate[1]
+    url = 'http://www.omdbapi.com/?s=' + 'naruto' + '&y='+'&apikey=' + 'd87fbf5f'
+    response = requests.get(url)
+    data = json.loads(response.text)
+    if data['Response'] == 'True':
+        d={}
+        len(data['Search'])
+    if len(data['Search']) >= 4:
+        for i in range(4):
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+        buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])], [KeyboardButton(d['option_3'][0])]]
+        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons))
+    elif len(data['Search']) == 3:
+        for i in range(3):
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+        buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])]]
+        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons))
+
+    elif len(data['Search']) == 2:
+        for i in range(2):
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+        buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])]]
+        context.bot.send_message(chat_id=update.effective_chat.id, text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons))
+
+    elif len(data['Search']) == 1:
+        for i in range(1):
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+
+
+        
+
+
+    #txt = get_rotten_tomatoes_rating(movie_name, movie_year)
+    #update.message.reply_photo(get_rotten_tomatoes_movie_posters(movie_name, movie_year), caption= str(txt), parse_mode="MARKDOWNV2")
+
+            
+    
+
 #Get Movie Info
 def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
     #Get the movie posters from omdb if the movie is found in the database
@@ -144,7 +189,7 @@ def get_rotten_tomatoes_movie_posters(movie_name, movie_year):
     else: 
         return 'https://i.imgur.com/tss8ZcO.png'
 
-
+#Get rating and other infos
 def get_rotten_tomatoes_rating(movie_name, movie_year):
     url = 'http://www.omdbapi.com/?t=' + movie_name + '&y='+ movie_year + '&apikey=' + omdb_api_key
     response = requests.get(url)
@@ -174,7 +219,7 @@ def get_rotten_tomatoes_rating(movie_name, movie_year):
 
         print('ok')
 
-        txt =  ('**Title:** ' + title + '\n' + '**Rotten Tomatoes Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
+        txt =  ('**Title:** ' + title + '\n' + '**R Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
         print (txt)
         txt_escaped = re.escape(txt)
         txt_escaped = txt_escaped.replace('\*\*\\', '**')
@@ -208,6 +253,8 @@ def main():
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('nota', print_rotten_tomatoes_rating))
     updater.dispatcher.add_handler(CommandHandler('game', print_igdb_info))
+    updater.dispatcher.add_handler(CommandHandler('test', get_results))
+
     updater.dispatcher.add_error_handler(error)
 
 
