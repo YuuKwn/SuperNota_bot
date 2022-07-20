@@ -181,8 +181,9 @@ def get_rotten_tomatoes_ratingg(movie_name):
         return txt_escaped.replace('\|\|', '||'), poster
 
 def messageHandler(update:Update, context: CallbackContext):
-   if update.message.text:
-        context.bot.send_message(chat_id = update.effective_chat.id, text='Got it', reply_markup=ReplyKeyboardRemove())
+   if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
+        reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+        reply.delete
         if update.message.text == d['option_0'][0]:
             txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
@@ -211,20 +212,21 @@ def get_results(update: Update, context: CallbackContext):
         for i in range(4):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])], [KeyboardButton(d['option_3'][0])]]
-        update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+        pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+
 
 
     elif len(data['Search']) == 3:
         for i in range(3):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])]]
-        update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+        pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
 
     elif len(data['Search']) == 2:
         for i in range(2):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])]]
-        update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+        pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
 
     elif len(data['Search']) == 1:
         for i in range(1):
