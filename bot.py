@@ -165,7 +165,7 @@ def get_rotten_tomatoes_ratingg(movie_name):
 
         print('ok')
 
-        txt =  ('**Title:** ' + title + '\n' + '**R Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
+        txt =  ('**Title:** ' + title + '\n' + '**RT Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
         print (txt)
         txt_escaped = re.escape(txt)
         txt_escaped = txt_escaped.replace('\*\*\\', '**')
@@ -185,6 +185,15 @@ def messageHandler(update:Update, context: CallbackContext):
         context.bot.send_message(chat_id = update.effective_chat.id, text='Got it', reply_markup=ReplyKeyboardRemove())
         if update.message.text == d['option_0'][0]:
             txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+        if update.message.text == d['option_1'][0]:
+            txt, poster = get_rotten_tomatoes_ratingg(d['option_1'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+        if update.message.text == d['option_2'][0]:
+            txt, poster = get_rotten_tomatoes_ratingg(d['option_2'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+        if update.message.text == d['option_3'][0]:
+            txt, poster = get_rotten_tomatoes_ratingg(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
 def get_results(update: Update, context: CallbackContext):
@@ -220,6 +229,8 @@ def get_results(update: Update, context: CallbackContext):
     elif len(data['Search']) == 1:
         for i in range(1):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+        txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
+        update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
         
 
 
