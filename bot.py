@@ -133,7 +133,7 @@ def print_igdb_info(update: Update, context: CallbackContext):
 def messageHandler(update:Update, context: CallbackContext):
    if update.message.text:
         context.bot.send_message(chat_id = update.effective_chat.id, text='Got it', reply_markup=ReplyKeyboardRemove())
-        if update.message.text == d['option_0'][0]
+        #if update.message.text == d['option_0'][0]
 
 def get_results(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
