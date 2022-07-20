@@ -213,6 +213,7 @@ def get_results(update: Update, context: CallbackContext):
 
 
 
+
     elif len(data['Search']) == 3:
         for i in range(3):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
@@ -224,6 +225,7 @@ def get_results(update: Update, context: CallbackContext):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])]]
         pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+        pick.delete()
 
     elif len(data['Search']) == 1:
         for i in range(1):
