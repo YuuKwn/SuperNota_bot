@@ -4,7 +4,7 @@ Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
 from telegram.ext.updater import Updater
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ReplyMarkup
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
@@ -130,8 +130,9 @@ def print_igdb_info(update: Update, context: CallbackContext):
         update.message.reply_photo(game_image, caption= str(txt))
 
 
-#def messageHandler(update:Update, context: CallbackContext):
- #   if 
+def messageHandler(update:Update, context: CallbackContext):
+   if update.message.text:
+        context.bot.send_message(chat_id = update.effective_chat.id, text='Ok', reply_markup=ReplyKeyboardRemove())
 
 def get_results(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
@@ -151,7 +152,6 @@ def get_results(update: Update, context: CallbackContext):
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])], [KeyboardButton(d['option_3'][0])]]
         #context.bot.send_message(chat_id=update.effective_chat.id, reply_to_message_id=update.effective_chat.id ,text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
         update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
-        update.message.reply_text(text='Pick one', reply_markup= ReplyKeyboardRemove)
 
 
 
