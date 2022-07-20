@@ -3,6 +3,7 @@ Telegram Bot to return the rating of a movie or game using the title
 Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
+from multiprocessing.connection import wait
 from telegram.ext.updater import Updater
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ReplyMarkup
 from telegram.update import Update
@@ -225,6 +226,7 @@ def get_results(update: Update, context: CallbackContext):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])]]
         pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+        wait(5)
         pick.delete()
 
     elif len(data['Search']) == 1:
