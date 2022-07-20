@@ -209,7 +209,7 @@ def get_results(update: Update, context: CallbackContext):
 
     if len(data['Search']) >= 4:
         for i in range(4):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']], data['Search'][i]['Year']
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
         buttons = [[KeyboardButton(str(d['option_0'][0]) +', '+ str(d['option_0'][2]))], [KeyboardButton(str(d['option_1'][0]) + ', ' + str(d['option_1'][2]))], [KeyboardButton(str(d['option_2'][0]) +', ' +  str(d['option_2'][2]))], [KeyboardButton(str(d['option_3'][0]) + ', '+ str(d['option_3'][2]))]]
         pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
@@ -218,13 +218,13 @@ def get_results(update: Update, context: CallbackContext):
 
     elif len(data['Search']) == 3:
         for i in range(3):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']], data['Search'][i]['Year']
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
         buttons = [[KeyboardButton(d['option_0'][0] +', '+ d['option_0'][2])], [KeyboardButton(d['option_1'][0] +', '+ d['option_1'][2])], [KeyboardButton(d['option_2'][0] +', '+ d['option_2'][2])]]
         pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
     elif len(data['Search']) == 2:
         for i in range(2):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']], data['Search'][i]['Year']
+            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
         buttons = [[KeyboardButton(d['option_0'][0] +', '+ d['option_0'][2])], [KeyboardButton(d['option_1'][0] +', '+ d['option_1'][2])]]
         pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
