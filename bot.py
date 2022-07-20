@@ -182,6 +182,7 @@ def messageHandler(update:Update, context: CallbackContext):
    if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
+        print('iriri')
         if update.message.text == d['option_0'][0] + d['option_0'][2] :
             txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
