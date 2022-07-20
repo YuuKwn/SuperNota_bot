@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 omdb_api_key = 'd87fbf5f'
 movieExists = False
 BOT_TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
-
+d={}
 
 
 igdb_client_id = 'rb28wttfszwg5kki1baracnzlki67z'
@@ -130,10 +130,62 @@ def print_igdb_info(update: Update, context: CallbackContext):
         update.message.reply_photo(game_image, caption= str(txt))
 
 
+
+#Get rating and other infos
+def get_rotten_tomatoes_ratingg(movie_name):
+    url = 'http://www.omdbapi.com/?i=' + movie_name+ '&apikey=' + omdb_api_key
+    response = requests.get(url)
+    data = json.loads(response.text)
+    rotten_rating = 'Not Found'
+    imdb_rating = 'Not Found'
+    meta_rating = 'Not Found'
+
+    try:
+        if data['Poster'] != 'N/A':
+            poster = data['Poster']
+        else:
+            poster = 'https://i.imgur.com/7wlZlWi.jpg'
+        title = data['Title']
+        released = data['Released']
+        country = data['Country']
+        plot = data['Plot']
+        director = data['Director']
+        try:
+            box_office = data['boxOffice']
+        except KeyError:
+            box_office = 'N/A'
+
+        for i in range(len(data['Ratings'])):
+            if data['Ratings'][i]['Source'] == 'Rotten Tomatoes':
+                rotten_rating = data['Ratings'][i]['Value']
+            if data['Ratings'][i]['Source'] == 'Internet Movie Database':
+                imdb_rating = data['Ratings'][i]['Value']
+            if data['Ratings'][i]['Source'] == 'Metacritic':
+                meta_rating = data['Ratings'][i]['Value']
+
+        print('ok')
+
+        txt =  ('**Title:** ' + title + '\n' + '**R Recommendation %:** ' + rotten_rating + '\n' '**IMDB User Rating Avg.:** ' + imdb_rating + '\n' '**Metacritic Avg.:** ' + meta_rating + '\n' + '**Released:** ' + released + '\n' + '**Director:** ' + director + '\n' +  '**Country:** ' + country + '\n' + '**Box Office:** ' + box_office + '\n' + '**Plot:** ' + '||' + plot + '||')
+        print (txt)
+        txt_escaped = re.escape(txt)
+        txt_escaped = txt_escaped.replace('\*\*\\', '**')
+        txt_escaped = txt_escaped.replace('\*\*', '**')
+        txt_escaped = txt_escaped.replace('\|\|', '||')
+        print(txt_escaped)
+        return txt_escaped, poster
+
+    except:
+        txt = (movie_name + 'not found')
+        txt_escaped = re.escape(txt)
+        poster = 'https://i.imgur.com/tss8ZcO.png'
+        return txt_escaped.replace('\|\|', '||'), poster
+
 def messageHandler(update:Update, context: CallbackContext):
    if update.message.text:
         context.bot.send_message(chat_id = update.effective_chat.id, text='Got it', reply_markup=ReplyKeyboardRemove())
-        #if update.message.text == d['option_0'][0]
+        if update.message.text == d['option_0'][0]:
+            txt, poster = get_rotten_tomatoes_ratingg(d['option_0'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
 def get_results(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
@@ -145,14 +197,13 @@ def get_results(update: Update, context: CallbackContext):
     response = requests.get(url)
     data = json.loads(response.text)
     if data['Response'] == 'True':
-        d={}
         len(data['Search'])
     if len(data['Search']) >= 4:
         for i in range(4):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         buttons = [[KeyboardButton(d['option_0'][0])], [KeyboardButton(d['option_1'][0])], [KeyboardButton(d['option_2'][0])], [KeyboardButton(d['option_3'][0])]]
-        #context.bot.send_message(chat_id=update.effective_chat.id, reply_to_message_id=update.effective_chat.id ,text= 'Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
         update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True))
+
 
     elif len(data['Search']) == 3:
         for i in range(3):
@@ -169,6 +220,7 @@ def get_results(update: Update, context: CallbackContext):
     elif len(data['Search']) == 1:
         for i in range(1):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+        
 
 
         
