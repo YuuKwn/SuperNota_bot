@@ -3,9 +3,8 @@ Telegram Bot to return the rating of a movie or game using the title
 Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
-from multiprocessing.connection import wait
 from telegram.ext.updater import Updater
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ReplyMarkup
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ReplyMarkup
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
@@ -16,34 +15,33 @@ from bs4 import BeautifulSoup
 from howlongtobeatpy import HowLongToBeat
 from translate import Translator
 from datetime import datetime
-
 t = Translator(to_lang="pt-BR")
-
 
 PORT = int(os.environ.get('PORT', 8443))
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
-
 logger = logging.getLogger(__name__)
 
-omdb_api_key = 'd87fbf5f'
+IGDB_CLIENT_ID = os.getenv('IGDB_CLIENT_ID')
+IGDB_SECRET = os.getenv('IGDB_SECRET')
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+OMDB_API_KEY = os.getenv('OMDB_API_KEY')
+#omdb_api_key = 'd87fbf5f'
 movieExists = False
-BOT_TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
+#BOT_TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
 d={}
-
-
-igdb_client_id = 'rb28wttfszwg5kki1baracnzlki67z'
-igdb_secret = 'wicf4p0pq1p76nexptfpxdopvp9tx2'
+#igdb_client_id = 'rb28wttfszwg5kki1baracnzlki67z'
+#igdb_secret = 'wicf4p0pq1p76nexptfpxdopvp9tx2'
 
 #Get Game info from IGDB
 def get_igdb_game_info(game_name):
     
-    response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+igdb_client_id+"&client_secret="+igdb_secret+"&grant_type=client_credentials")
+    response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+IGDB_CLIENT_ID+"&client_secret="+IGDB_SECRET+"&grant_type=client_credentials")
 
     access_token = response.json()['access_token']
     headers = {
-        'Client-ID': igdb_client_id,
+        'Client-ID': IGDB_CLIENT_ID,
         'Authorization': 'Bearer ' + access_token
         }
 
@@ -134,7 +132,7 @@ def print_igdb_info(update: Update, context: CallbackContext):
 
 #Get rating and other infos
 def get_rotten_tomatoes_rating(movie_name):
-    url = 'http://www.omdbapi.com/?i=' + movie_name+ '&apikey=' + omdb_api_key
+    url = 'http://www.omdbapi.com/?i=' + movie_name+ '&apikey=' + OMDB_API_KEY
     response = requests.get(url)
     data = json.loads(response.text)
     rotten_rating = 'Not Found'
