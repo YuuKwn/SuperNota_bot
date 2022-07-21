@@ -27,13 +27,8 @@ IGDB_CLIENT_ID = os.getenv('IGDB_CLIENT_ID')
 IGDB_SECRET = os.getenv('IGDB_SECRET')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 OMDB_API_KEY = os.getenv('OMDB_API_KEY')
-#omdb_api_key = 'd87fbf5f'
 movieExists = False
-#BOT_TOKEN = '5205421916:AAEBcTQYdpYt6HKmW6VieNrSnibr-5GS6vg'
 d={}
-#igdb_client_id = 'rb28wttfszwg5kki1baracnzlki67z'
-#igdb_secret = 'wicf4p0pq1p76nexptfpxdopvp9tx2'
-
 #Get Game info from IGDB
 def get_igdb_game_info(game_name):
     
