@@ -213,8 +213,6 @@ def get_game_results(update: Update, context: CallbackContext):
 
 def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
-    if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
-        print('ok')
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
         if update.message.text == '1.'+d['option_0'][0] + ', '+ d['option_0'][2] :
@@ -234,9 +232,6 @@ def messageHandler(update:Update, context: CallbackContext):
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
      #verification for games
-    if update.message.text == ('1.'+g['game_0'][0] + ', ' + g['game_0'][1]) or ('2.'+g['game_1'][0] + ', ' + g['game_1'][1]) or ('3.'+g['game_2'][0] + ', ' + g['game_2'][1]) or ('4.'+g['game_3'][0] + ', ' + g['game_3'][1]):
-        reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
-        reply.delete()
 
 def get_results(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
@@ -244,7 +239,7 @@ def get_results(update: Update, context: CallbackContext):
     movie_year = ""
     if len(separate) > 1:
         movie_year = separate[1]
-    url = 'http://www.omdbapi.com/?s=' + movie_name + '&y='+ movie_year+'&apikey=' + 'd87fbf5f'
+    url = 'http://www.omdbapi.com/?s=' + movie_name + '&y='+ movie_year+'&apikey=' + OMDB_API_KEY
     response = requests.get(url)
     data = json.loads(response.text)
     if data['Response'] == 'True':
