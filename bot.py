@@ -173,6 +173,7 @@ def get_rotten_tomatoes_rating(movie_name):
         return txt_escaped.replace('\|\|', '||'), poster
 
 def get_game_results(update: Update, context: CallbackContext):
+    game_name = " ".join(context.args)
     response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+IGDB_CLIENT_ID+"&client_secret="+IGDB_SECRET+"&grant_type=client_credentials")
 
     access_token = response.json()['access_token']
@@ -181,11 +182,10 @@ def get_game_results(update: Update, context: CallbackContext):
         'Authorization': 'Bearer ' + access_token
             }
 
-    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+'naruto+ultimate+ninja'+"&where=parent_game=null", headers=headers)
+    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
 
     game_info = game_info.json()
 
-    print(game_info)
     if game_info != []:
 
         if len(game_info) == 4:
@@ -214,6 +214,7 @@ def get_game_results(update: Update, context: CallbackContext):
 def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
     if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
+        print('ok')
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
         if update.message.text == '1.'+d['option_0'][0] + ', '+ d['option_0'][2] :
@@ -235,7 +236,6 @@ def messageHandler(update:Update, context: CallbackContext):
      #verification for games
     if update.message.text == ('1.'+g['game_0'][0] + ', ' + g['game_0'][1]) or ('2.'+g['game_1'][0] + ', ' + g['game_1'][1]) or ('3.'+g['game_2'][0] + ', ' + g['game_2'][1]) or ('4.'+g['game_3'][0] + ', ' + g['game_3'][1]):
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
-        print('ok')
         reply.delete()
 
 def get_results(update: Update, context: CallbackContext):
