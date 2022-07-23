@@ -4,7 +4,7 @@ Source: https://github.com/YuuKwn/SuperNota_bot/blob/main/bot.py
 """
 
 from telegram.ext.updater import Updater
-from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, ReplyMarkup
+from telegram import KeyboardButton, Message, ReplyKeyboardMarkup, ReplyKeyboardRemove, ReplyMarkup
 from telegram.update import Update
 from telegram.ext.callbackcontext import CallbackContext
 from telegram.ext.commandhandler import CommandHandler
@@ -30,6 +30,7 @@ OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 movieExists = False
 d={}
 g={}
+
 
 #Get Game info from IGDB
 def get_igdb_game_info(game_name):
@@ -232,7 +233,7 @@ def messageHandler(update:Update, context: CallbackContext):
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
      #verification for games
-    if update.message.text == '1.'+g['game_0'][0]:
+    if update.message.text == ('1.'+g['game_0'][0] + ', ' + g['game_0'][1]) or ('2.'+g['game_1'][0] + ', ' + g['game_1'][1]) or ('3.'+g['game_2'][0] + ', ' + g['game_2'][1]) or ('4.'+g['game_3'][0] + ', ' + g['game_3'][1]):
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
 
