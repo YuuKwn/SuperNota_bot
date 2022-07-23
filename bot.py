@@ -146,7 +146,7 @@ def get_rotten_tomatoes_rating(movie_name):
         plot = data['Plot']
         director = data['Director']
         try:
-            box_office = data['boxOffice']
+            box_office = data['BoxOffice']
         except KeyError:
             box_office = 'N/A'
 
@@ -229,6 +229,10 @@ def messageHandler(update:Update, context: CallbackContext):
 
         if update.message.text == '4.'+d['option_3'][0] + ', '+ d['option_3'][2]:
             txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+
+        if update.message.text == '1.'+g['game_0'][0] + ', '+ g['game_0'][1]:
+            txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
      #verification for games
