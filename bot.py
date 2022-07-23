@@ -232,7 +232,7 @@ def messageHandler(update:Update, context: CallbackContext):
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
      #verification for games
-    if update.message.text == '1.'+g['game_0'][0] + ', ' + g['game_0'][1] or '2.'+g['game_1'][0] + ', ' + g['game_1'][1] or '3.'+g['game_2'][0] + ', ' + g['game_2'][1] or '4.'+g['game_3'][0] + ', ' + g['game_3'][1]:
+    if update.message.text == '1.'+g['game_0'][0]:
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
 
