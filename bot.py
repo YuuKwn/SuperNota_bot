@@ -29,6 +29,8 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 movieExists = False
 d={}
+g={}
+
 #Get Game info from IGDB
 def get_igdb_game_info(game_name):
     
@@ -40,7 +42,7 @@ def get_igdb_game_info(game_name):
         'Authorization': 'Bearer ' + access_token
         }
 
-    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=1&search="+game_name+"&where=parent_game=null", headers=headers)
+    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
     game_info = game_info.json()
     if game_info == []:
         return 'Game not found', 'https://i.imgur.com/2lFiGXm.png', '', '', '', '', '', '', '', ''
@@ -123,8 +125,6 @@ def print_igdb_info(update: Update, context: CallbackContext):
         txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
         update.message.reply_photo(game_image, caption= str(txt))
 
-
-
 #Get rating and other infos
 def get_rotten_tomatoes_rating(movie_name):
     url = 'http://www.omdbapi.com/?i=' + movie_name+ '&apikey=' + OMDB_API_KEY
@@ -171,12 +171,53 @@ def get_rotten_tomatoes_rating(movie_name):
         poster = 'https://i.imgur.com/tss8ZcO.png'
         return txt_escaped.replace('\|\|', '||'), poster
 
+def get_game_results(update: Update, context: CallbackContext):
+    response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+IGDB_CLIENT_ID+"&client_secret="+IGDB_SECRET+"&grant_type=client_credentials")
+
+    access_token = response.json()['access_token']
+    headers = {
+            'Client-ID': IGDB_CLIENT_ID,
+        'Authorization': 'Bearer ' + access_token
+            }
+
+    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+'naruto+ultimate+ninja'+"&where=parent_game=null", headers=headers)
+
+    game_info = game_info.json()
+
+    print(game_info)
+    if game_info != []:
+
+        if len(game_info) == 4:
+            for i in range(4):
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])], [KeyboardButton('4.'+(g['game_3'][0]) + ', '+ (g['game_3'][1]))]]
+                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+
+        if len(game_info) == 3:
+            for i in range(3):
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])]]
+                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+
+        if len(game_info) == 2:
+            for i in range(2):
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])]]
+                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+
+        if len(game_info) == 1:
+            for i in range(4):
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])], [KeyboardButton('4.'+(g['game_3'][0]) + ', '+ (g['game_3'][1]))]]
+                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+        
+
 def messageHandler(update:Update, context: CallbackContext):
-   if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
+    #verification for movies/series
+    if update.message.text == d['option_0'][0] or d['option_1'][0] or d['option_2'][0] or d['option_3'][0]:
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
         if update.message.text == '1.'+d['option_0'][0] + ', '+ d['option_0'][2] :
-            print('222')
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
@@ -191,6 +232,11 @@ def messageHandler(update:Update, context: CallbackContext):
         if update.message.text == '4.'+d['option_3'][0] + ', '+ d['option_3'][2]:
             txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+
+     #verification for games
+    if update.message.text == '1.'+g['game_0'][0] + ', ' + g['game_0'][1] or '2.'+g['game_1'][0] + ', ' + g['game_1'][1] or '3.'+g['game_2'][0] + ', ' + g['game_2'][1] or '4.'+g['game_3'][0] + ', ' + g['game_3'][1]:
+        reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+        reply.delete()
 
 def get_results(update: Update, context: CallbackContext):
     separate = " ".join(context.args).split(",")
@@ -241,7 +287,7 @@ def main():
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('nota', get_results))
     updater.dispatcher.add_handler(CommandHandler('game', print_igdb_info))
-    updater.dispatcher.add_handler(CommandHandler('test', get_results))
+    updater.dispatcher.add_handler(CommandHandler('test', get_game_results))
 
     updater.dispatcher.add_error_handler(error)
     updater.dispatcher.add_handler(MessageHandler(Filters.text, messageHandler))
