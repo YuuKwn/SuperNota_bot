@@ -191,20 +191,20 @@ def get_game_results(update: Update, context: CallbackContext):
         if len(game_info) == 4:
             for i in range(4):
                 g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
-                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])], [KeyboardButton('4.'+g['game_3'][0] + ', '+ g['game_3'][1])]]
-                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+            buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])], [KeyboardButton('4.'+g['game_3'][0] + ', '+ g['game_3'][1])]]
+            pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 3:
             for i in range(3):
                 g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
-                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])]]
-                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+            buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])]]
+            pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 2:
             for i in range(2):
                 g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
-                buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])]]
-                pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+            buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])]]
+            pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 1:
             print('ok')
