@@ -212,7 +212,9 @@ def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
+        print('hey')
         if update.message.text == option_0:
+            print('ho')
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
