@@ -178,9 +178,9 @@ def get_game_results(update: Update, context: CallbackContext):
     access_token = response.json()['access_token']
     wrapper = IGDBWrapper(IGDB_CLIENT_ID, access_token)
     game_info = wrapper.api_request(
-                'games',
-                'fields name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url ; limit 4; where name='+game_name+',parent_game=null;'
-            )
+        'games',
+        'search \"Thief\";fields name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url; limit 4; where parent_game=null;'
+        )
 
     #game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
 
