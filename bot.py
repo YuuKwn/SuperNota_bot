@@ -169,7 +169,7 @@ def get_game_results(update: Update, context: CallbackContext):
     wrapper = IGDBWrapper(IGDB_CLIENT_ID, access_token)
     game_info = wrapper.api_request(
         'games',
-        'search \"'+game_name+'\";fields id,name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url; limit 4; where genres >= 1;'
+        'search \"'+game_name+'\";fields id,name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url; limit 4; where genres >= 1; where first_release_date >= 17705387;'
         )
 
     game_info = json.loads(game_info.decode('utf-8'))
