@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 from howlongtobeatpy import HowLongToBeat
 from translate import Translator
 from datetime import datetime
-t = Translator(to_lang="pt-BR")
+from igdb.wrapper import IGDBWrapper
 
 PORT = int(os.environ.get('PORT', 8443))
 # Enable logging
@@ -175,16 +175,16 @@ def get_rotten_tomatoes_rating(movie_name):
 def get_game_results(update: Update, context: CallbackContext):
     game_name = " ".join(context.args)
     response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+IGDB_CLIENT_ID+"&client_secret="+IGDB_SECRET+"&grant_type=client_credentials")
-
     access_token = response.json()['access_token']
-    headers = {
-            'Client-ID': IGDB_CLIENT_ID,
-        'Authorization': 'Bearer ' + access_token
-            }
+    wrapper = IGDBWrapper(IGDB_CLIENT_ID, access_token)
+    game_info = wrapper.api_request(
+                'games',
+                'fields name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url ; limit 4; where name='+game_name+',parent_game=null;'
+            )
 
-    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
+    #game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
 
-    game_info = game_info.json()
+    game_info = json.loads(game_info.decode('utf-8'))
 
     if game_info != []:
 
