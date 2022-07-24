@@ -213,6 +213,7 @@ def messageHandler(update:Update, context: CallbackContext):
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
         print('hey')
+        print('option_0')
         if update.message.text == option_0:
             print('ho')
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
