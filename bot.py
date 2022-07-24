@@ -30,101 +30,89 @@ OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 movieExists = False
 d={}
 g={}
-
+game_not_found= 'https://i.imgur.com/2lFiGXm.png'
+wrong_game='https://c.tenor.com/14hr1KPxcCoAAAAC/community-donald-glover.gif'
 
 #Get Game info from IGDB
-def get_igdb_game_info(game_name):
+def get_igdb_game_info(game_id):
     
     response = requests.post("https://id.twitch.tv/oauth2/token?client_id="+IGDB_CLIENT_ID+"&client_secret="+IGDB_SECRET+"&grant_type=client_credentials")
-
     access_token = response.json()['access_token']
-    headers = {
-        'Client-ID': IGDB_CLIENT_ID,
-        'Authorization': 'Bearer ' + access_token
-        }
+    wrapper = IGDBWrapper(IGDB_CLIENT_ID, access_token)
+    game_info = wrapper.api_request(
+        'games',
+        'fields name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url; where id='+game_id+';'
+        )
+    game_info = json.loads(game_info.decode('utf-8'))
+   
+    try:
+        game_title = game_info[0]['name']
 
-    game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
-    game_info = game_info.json()
-    if game_info == []:
-        return 'Game not found', 'https://i.imgur.com/2lFiGXm.png', '', '', '', '', '', '', '', ''
-    elif game_info != []:    
         try:
-            game_title = game_info[0]['name']
-
-            try:
-                game_image = game_info[0]['cover']['url']
-                game_image = game_image.replace('t_thumb', 't_cover_big')
-                game_image = game_image.replace('//', 'https://')
+            game_image = game_info[0]['cover']['url']
+            game_image = game_image.replace('t_thumb', 't_cover_big')
+            game_image = game_image.replace('//', 'https://')
                 
-            except:
-                game_image = 'https://i.imgur.com/RgTqosu.jpg'
-            try:
-                game_critic_rating = str(round(game_info[0]['aggregated_rating'], 0))[:-2]
-            except:
-                game_critic_rating = 'N/A'
-            try:
-                game_user_rating = str(round(game_info[0]['rating'], 0))[:-2]
-            except:
-                game_user_rating = 'N/A'
-            try:
-                game_release_date = datetime.utcfromtimestamp(game_info[0]['first_release_date']).strftime('%d/%m/%Y')
-            except:
-                game_release_date = 'N/A'
-            game_genres = game_info[0]['genres']
-            game_platforms = game_info[0]['platforms']
-            game_platforms_names = ''
-            game_genres_names = ''
-            for i in range(len(game_genres)):
-                game_genres_names += game_genres[i]['name'] + ', '  
-                
-            for i in range(len(game_platforms)):
-                game_platforms_names += game_platforms[i]['name'] + ', '
-
-            game_genres_names = game_genres_names[:-2]
-            game_platforms_names = game_platforms_names[:-2]
-
-            #Based on the game name, get HowLongToBeat's information]
-            results_list = HowLongToBeat().search(game_title)
-            if results_list is not None and len(results_list) > 0:
-                best_element = results_list[0]
-                if best_element.gameplay_main_unit is not None:       
-                    hltb_main = (str(best_element.gameplay_main) + " " +best_element.gameplay_main_unit)
-
-                    hltb_main = hltb_main.replace('-1', 'N/A')
-                else: 
-                    hltb_main = 'N/A'
-
-                if best_element.gameplay_main_extra_unit is not None:
-                    hltb_extras = (str(best_element.gameplay_main_extra) + " " +best_element.gameplay_main_extra_unit)
-
-                    hltb_extras = hltb_extras.replace('-1', 'N/A')
-                else: 
-                    hltb_extras = 'N/A'
-
-                if best_element.gameplay_completionist_unit is not None:
-                    hltb_completionist = (str(best_element.gameplay_completionist) + " " +best_element.gameplay_completionist_unit)  
-
-                    hltb_completionist = hltb_completionist.replace('-1', 'N/A')
-                else: 
-                    hltb_completionist = 'N/A'
-                
-                return game_title, game_image, game_critic_rating, game_user_rating, game_release_date, game_genres_names, game_platforms_names, hltb_main, hltb_extras, hltb_completionist
-            else:
-
-                return game_title, game_image, game_critic_rating, game_user_rating, game_release_date, game_genres_names, game_platforms_names, 'N/A', 'N/A', 'N/A'
         except:
-            return 'Deu um ruim inesperado', 'https://c.tenor.com/14hr1KPxcCoAAAAC/community-donald-glover.gif', '', '', '', '', '', '', '', ''
+            game_image = 'https://i.imgur.com/RgTqosu.jpg'
+        try:
+            game_critic_rating = str(round(game_info[0]['aggregated_rating'], 0))[:-2]
+        except:
+            game_critic_rating = 'N/A'
+        try:
+            game_user_rating = str(round(game_info[0]['rating'], 0))[:-2]
+        except:
+            game_user_rating = 'N/A'
+        try:
+            game_release_date = datetime.utcfromtimestamp(game_info[0]['first_release_date']).strftime('%d/%m/%Y')
+        except:
+            game_release_date = 'N/A'
+        game_genres = game_info[0]['genres']
+        game_platforms = game_info[0]['platforms']
+        game_platforms_names = ''
+        game_genres_names = ''
+        for i in range(len(game_genres)):
+            game_genres_names += game_genres[i]['name'] + ', '  
+                
+        for i in range(len(game_platforms)):
+            game_platforms_names += game_platforms[i]['name'] + ', '
 
-#Generate variable with Game info
-def print_igdb_info(update: Update, context: CallbackContext):
-    game_name = " ".join(context.args)
-    game_title, game_image, game_critic_rating, game_user_rating, game_release_date, game_genres_names, game_platforms_names, hltb_main, hltb_extras, hltb_completionist = get_igdb_game_info(game_name)
-    if game_title == 'Game not found' or game_title == 'Deu um ruim inesperado':
-        update.message.reply_photo(game_image, caption= str(game_title))
+        game_genres_names = game_genres_names[:-2]
+        game_platforms_names = game_platforms_names[:-2]
 
-    else:
-        txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
-        update.message.reply_photo(game_image, caption= str(txt))
+        #Based on the game name, get HowLongToBeat's information]
+        results_list = HowLongToBeat().search(game_title)
+        if results_list is not None and len(results_list) > 0:
+            best_element = results_list[0]
+            if best_element.gameplay_main_unit is not None:       
+                hltb_main = (str(best_element.gameplay_main) + " " +best_element.gameplay_main_unit)
+
+                hltb_main = hltb_main.replace('-1', 'N/A')
+            else: 
+                hltb_main = 'N/A'
+
+            if best_element.gameplay_main_extra_unit is not None:
+                hltb_extras = (str(best_element.gameplay_main_extra) + " " +best_element.gameplay_main_extra_unit)
+
+                hltb_extras = hltb_extras.replace('-1', 'N/A')
+            else: 
+                hltb_extras = 'N/A'
+
+            if best_element.gameplay_completionist_unit is not None:
+                hltb_completionist = (str(best_element.gameplay_completionist) + " " +best_element.gameplay_completionist_unit)  
+
+                hltb_completionist = hltb_completionist.replace('-1', 'N/A')
+            else: 
+                hltb_completionist = 'N/A'
+            
+            txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
+
+            return game_image, txt
+        else:
+            txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + '?' + '\n' + 'Time to beat + extras: ' + '?' + '\n' + 'Time to beat everything: ' + '?')
+            return game_image, txt
+    except:
+        return wrong_game, 'Something went wrong'
 
 #Get rating and other infos
 def get_rotten_tomatoes_rating(movie_name):
@@ -179,30 +167,29 @@ def get_game_results(update: Update, context: CallbackContext):
     wrapper = IGDBWrapper(IGDB_CLIENT_ID, access_token)
     game_info = wrapper.api_request(
         'games',
-        'search \"'+game_name+'\";fields name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url; limit 4; where parent_game=null;'
+        'search \"'+game_name+'\";fields id,name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url; limit 4; where parent_game=null;'
         )
 
-    #game_info = requests.post("https://api.igdb.com/v4/games/?fields=name,aggregated_rating,rating,first_release_date,genres.name,platforms.name,cover.url&limit=4&search="+game_name+"&where=parent_game=null", headers=headers)
-
     game_info = json.loads(game_info.decode('utf-8'))
-
+    if game_info == []:
+        update.message.reply_photo(game_not_found, caption= str('Game not found'), parse_mode="MARKDOWNV2")
     if game_info != []:
 
         if len(game_info) == 4:
             for i in range(4):
-                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y'), str(game_info[i]['id'])
             buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])], [KeyboardButton('4.'+g['game_3'][0] + ', '+ g['game_3'][1])]]
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 3:
             for i in range(3):
-                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y'), str(game_info[i]['id'])
             buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])]]
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 2:
             for i in range(2):
-                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y')
+                g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y'), str(game_info[i]['id'])
             buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])]]
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
@@ -232,8 +219,20 @@ def messageHandler(update:Update, context: CallbackContext):
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == '1.'+g['game_0'][0] + ', '+ g['game_0'][1]:
-            txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
-            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+            game_image, txt= get_igdb_game_info(g['game_0'][2])
+            update.message.reply_photo(game_image, caption= str(txt), parse_mode="MARKDOWNV2")
+
+        if update.message.text == '2.'+g['game_1'][0] + ', '+ g['game_1'][1]:
+            game_image, txt= get_igdb_game_info(g['game_1'][2])
+            update.message.reply_photo(game_image, caption= str(txt), parse_mode="MARKDOWNV2")
+
+        if update.message.text == '3.'+g['game_2'][0] + ', '+ g['game_2'][1]:
+            game_image, txt= get_igdb_game_info(g['game_2'][2])
+            update.message.reply_photo(game_image, caption= str(txt), parse_mode="MARKDOWNV2")
+
+        if update.message.text == '4.'+g['game_3'][0] + ', '+ g['game_3'][1]:
+            game_image, txt= get_igdb_game_info(g['game_3'][2])
+            update.message.reply_photo(game_image, caption= str(txt), parse_mode="MARKDOWNV2")
 
      #verification for games
 
@@ -285,8 +284,7 @@ def main():
     updater = Updater(BOT_TOKEN,
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('nota', get_results))
-    updater.dispatcher.add_handler(CommandHandler('game', print_igdb_info))
-    updater.dispatcher.add_handler(CommandHandler('test', get_game_results))
+    updater.dispatcher.add_handler(CommandHandler('game', get_game_results))
 
     updater.dispatcher.add_error_handler(error)
     updater.dispatcher.add_handler(MessageHandler(Filters.text, messageHandler))
