@@ -105,11 +105,11 @@ def get_igdb_game_info(game_id):
             else: 
                 hltb_completionist = 'N/A'
             
-            txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat with extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
+            txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + hltb_main + '\n' + 'Time to beat + extras: ' + hltb_extras + '\n' + 'Time to beat everything: ' + hltb_completionist)
 
             return game_image, txt
         else:
-            txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + '?' + '\n' + 'Time to beat with extras: ' + '?' + '\n' + 'Time to beat everything: ' + '?')
+            txt = ('Game: ' + game_title + '\n' + 'Critic Rating: ' + game_critic_rating + '\n' + 'User Rating: ' + game_user_rating + '\n' + 'Platforms: ' + game_platforms_names + '\n' + 'Release Date: ' + game_release_date + '\n' + 'Genres: ' + game_genres_names+ '\n' + 'Time to beat: ' + '?' + '\n' + 'Time to beat + extras: ' + '?' + '\n' + 'Time to beat everything: ' + '?')
             return game_image, txt
     except:
         return wrong_game, 'Something went wrong'
@@ -202,7 +202,21 @@ def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
+        if update.message.text == '1.'+d['option_0'][0] + ', '+ d['option_0'][2] :
+            txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
+        if update.message.text == '2.'+d['option_1'][0] + ', '+ d['option_1'][2]:
+            txt, poster = get_rotten_tomatoes_rating(d['option_1'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+
+        if update.message.text == '3.'+d['option_2'][0] + ', '+ d['option_2'][2]:
+            txt, poster = get_rotten_tomatoes_rating(d['option_2'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+
+        if update.message.text == '4.'+d['option_3'][0] + ', '+ d['option_3'][2]:
+            txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == '1.'+g['game_0'][0] + ', '+ g['game_0'][1]:
             game_image, txt= get_igdb_game_info(g['game_0'][2])
