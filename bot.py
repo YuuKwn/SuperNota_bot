@@ -211,37 +211,52 @@ def get_game_results(update: Update, context: CallbackContext):
 
 def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
-        reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
-        reply.delete()
+
         if update.message.text == option_0:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == option_1:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             txt, poster = get_rotten_tomatoes_rating(d['option_1'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == option_2:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             txt, poster = get_rotten_tomatoes_rating(d['option_2'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == option_3:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
         if update.message.text == game_0:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             game_image, txt= get_igdb_game_info(g['game_0'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
         if update.message.text == game_1:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             game_image, txt= get_igdb_game_info(g['game_1'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
         if update.message.text == game_2:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             game_image, txt= get_igdb_game_info(g['game_2'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
         if update.message.text == game_3:
+            reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
+            reply.delete()
             game_image, txt= get_igdb_game_info(g['game_3'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
