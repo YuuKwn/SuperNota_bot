@@ -212,35 +212,35 @@ def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
-        if option_0 in update.message.text:
+        if update.message.text == option_0:
             txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if option_1 in update.message.text:
+        if update.message.text == option_1:
             txt, poster = get_rotten_tomatoes_rating(d['option_1'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if option_2 in update.message.text:
+        if update.message.text == option_2:
             txt, poster = get_rotten_tomatoes_rating(d['option_2'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if option_3 in update.message.text:
+        if update.message.text == option_3:
             txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if game_0 in update.message.text:
+        if update.message.text == game_0:
             game_image, txt= get_igdb_game_info(g['game_0'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
-        if game_1 in update.message.text:
+        if update.message.text == game_1:
             game_image, txt= get_igdb_game_info(g['game_1'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
-        if game_2 in update.message.text:
+        if update.message.text == game_2:
             game_image, txt= get_igdb_game_info(g['game_2'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
-        if game_3 in update.message.text:
+        if update.message.text == game_3:
             game_image, txt= get_igdb_game_info(g['game_3'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
