@@ -28,6 +28,7 @@ IGDB_SECRET = os.getenv('IGDB_SECRET')
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 OMDB_API_KEY = os.getenv('OMDB_API_KEY')
 movieExists = False
+game_0, game_1, game_2, game_3, option_0, option_1, option_2, option_3 = ''
 d={}
 g={}
 game_not_found= 'https://i.imgur.com/2lFiGXm.png'
@@ -178,19 +179,28 @@ def get_game_results(update: Update, context: CallbackContext):
         if len(game_info) == 4:
             for i in range(4):
                 g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y'), str(game_info[i]['id'])
-            buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])], [KeyboardButton('4.'+g['game_3'][0] + ', '+ g['game_3'][1])]]
+            game_0 = ('1.' +g['game_0'][0]+', '+g['game_0'][1])
+            game_1 = ('2.' +g['game_1'][0]+', '+g['game_1'][1])
+            game_2 = ('3.' +g['game_2'][0]+', '+g['game_2'][1])
+            game_3 = ('4.' +g['game_3'][0]+', '+g['game_3'][1])    
+            buttons = [[KeyboardButton(game_0)], [KeyboardButton(game_1)], [KeyboardButton(game_2)], [KeyboardButton(game_3)]]
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 3:
             for i in range(3):
                 g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y'), str(game_info[i]['id'])
-            buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])], [KeyboardButton('3.'+g['game_2'][0] +', '+ g['game_2'][1])]]
+            game_0 = ('1.' +g['game_0'][0]+', '+g['game_0'][1])
+            game_1 = ('2.' +g['game_1'][0]+', '+g['game_1'][1])
+            game_2 = ('3.' +g['game_2'][0]+', '+g['game_2'][1])
+            buttons = [[KeyboardButton(game_0)], [KeyboardButton(game_1)], [KeyboardButton(game_2)]]
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 2:
             for i in range(2):
                 g["game_{0}".format(i)] = game_info[i]['name'], datetime.utcfromtimestamp(game_info[i]['first_release_date']).strftime('%Y'), str(game_info[i]['id'])
-            buttons = [[KeyboardButton('1.'+g['game_0'][0] +', '+ g['game_0'][1])], [KeyboardButton('2.'+g['game_1'][0] +', '+ g['game_1'][1])]]
+            game_0 = ('1.' +g['game_0'][0]+', '+g['game_0'][1])
+            game_1 = ('2.' +g['game_1'][0]+', '+g['game_1'][1])
+            buttons = [[KeyboardButton(game_0)], [KeyboardButton(game_1)]]
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 1:
@@ -202,33 +212,35 @@ def messageHandler(update:Update, context: CallbackContext):
     #verification for movies/series
         reply = context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is', reply_markup=ReplyKeyboardRemove())
         reply.delete()
+        if option_0 in update.message.text:
+            txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-
-        if update.message.text == ('2.'+d['option_1'][0] + ', '+ d['option_1'][2]):
+        if option_1 in update.message.text:
             txt, poster = get_rotten_tomatoes_rating(d['option_1'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if update.message.text == ('3.'+d['option_2'][0] + ', '+ d['option_2'][2]):
+        if option_2 in update.message.text:
             txt, poster = get_rotten_tomatoes_rating(d['option_2'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if update.message.text == ('4.'+d['option_3'][0] + ', '+ d['option_3'][2]):
+        if option_3 in update.message.text:
             txt, poster = get_rotten_tomatoes_rating(d['option_3'][1])
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
 
-        if update.message.text == ('1.'+g['game_0'][0] + ', '+ g['game_0'][1]):
+        if game_0 in update.message.text:
             game_image, txt= get_igdb_game_info(g['game_0'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
-        if update.message.text == ('2.'+g['game_1'][0] + ', '+ g['game_1'][1]):
+        if game_1 in update.message.text:
             game_image, txt= get_igdb_game_info(g['game_1'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
-        if update.message.text == ('3.'+g['game_2'][0] + ', '+ g['game_2'][1]):
+        if game_2 in update.message.text:
             game_image, txt= get_igdb_game_info(g['game_2'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
-        if update.message.text == ('4.'+g['game_3'][0] + ', '+ g['game_3'][1]):
+        if game_3 in update.message.text:
             game_image, txt= get_igdb_game_info(g['game_3'][2])
             update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
@@ -249,19 +261,28 @@ def get_results(update: Update, context: CallbackContext):
     if len(data['Search']) >= 4:
         for i in range(4):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
-        buttons = [[KeyboardButton('1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2]))], [KeyboardButton('2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2]))], [KeyboardButton('3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2]))], [KeyboardButton('4.'+str(d['option_3'][0]) + ', '+ str(d['option_3'][2]))]]
+        option_0 = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
+        option_1 = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
+        option_2 = '3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2])
+        option_3 = '4.'+str(d['option_3'][0]) + ', '+ str(d['option_3'][2])
+        buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)], [KeyboardButton(option_2)], [KeyboardButton(option_3)]]
         pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
     elif len(data['Search']) == 3:
         for i in range(3):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
-        buttons = [[KeyboardButton('1.'+d['option_0'][0] +', '+ d['option_0'][2])], [KeyboardButton('2.'+d['option_1'][0] +', '+ d['option_1'][2])], [KeyboardButton('3.'+d['option_2'][0] +', '+ d['option_2'][2])]]
+        option_0 = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
+        option_1 = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
+        option_2 = '3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2])
+        buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)], [KeyboardButton(option_2)]]
         pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
     elif len(data['Search']) == 2:
         for i in range(2):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
-        buttons = [[KeyboardButton('1.'+d['option_0'][0] +', '+ d['option_0'][2])], [KeyboardButton('2.'+d['option_1'][0] +', '+ d['option_1'][2])]]
+        option_0 = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
+        option_1 = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
+        buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)]]
         pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
 
