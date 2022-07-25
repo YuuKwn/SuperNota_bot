@@ -205,8 +205,8 @@ def get_game_results(update: Update, context: CallbackContext):
             pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
         if len(game_info) == 1:
-            txt, poster = get_rotten_tomatoes_rating(str(game_info[0]['id']))
-            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+            game_image, txt= get_igdb_game_info(str(game_info[0]['id']))
+            update.message.reply_photo(game_image, caption= str(txt), parse_mode="HTML")
 
         
 
