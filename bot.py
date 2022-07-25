@@ -311,7 +311,8 @@ def get_results(update: Update, context: CallbackContext):
             update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
         
     
-
+def remove_keyboard(update: Update, context: CallbackContext):
+    context.bot.send_message(chat_id = update.effective_chat.id, text='Here it is',reply_markup=ReplyKeyboardRemove(selective=True))
 
 def error(update, context):
     """Log Errors caused by Updates."""
@@ -322,6 +323,8 @@ def main():
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('nota', get_results))
     updater.dispatcher.add_handler(CommandHandler('game', get_game_results))
+    updater.dispatcher.add_handler(CommandHandler('keyboard', remove_keyboard()))
+
 
     updater.dispatcher.add_error_handler(error)
     updater.dispatcher.add_handler(MessageHandler(Filters.text, messageHandler))
