@@ -272,8 +272,6 @@ def get_results(update: Update, context: CallbackContext):
     url = 'http://www.omdbapi.com/?s=' + movie_name + '&y='+ movie_year+'&apikey=' + OMDB_API_KEY
     response = requests.get(url)
     data = json.loads(response.text)
-    if data['Response'] == 'True':
-        len(data['Search'])
 
     if len(data['Search']) >= 4:
         for i in range(4):
@@ -308,6 +306,11 @@ def get_results(update: Update, context: CallbackContext):
             d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
         txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
         update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+    
+    else:
+        txt, poster = get_rotten_tomatoes_rating('on your majesty secret service')
+        update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+
 
 def error(update, context):
     """Log Errors caused by Updates."""
