@@ -272,41 +272,41 @@ def get_results(update: Update, context: CallbackContext):
     url = 'http://www.omdbapi.com/?s=' + movie_name + '&y='+ movie_year+'&apikey=' + OMDB_API_KEY
     response = requests.get(url)
     data = json.loads(response.text)
+    if data['Response'] == True:
+        if len(data['Search']) >= 4:
+            for i in range(4):
+                d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
+            globals['option_0'] = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
+            globals['option_1'] = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
+            globals['option_2'] = '3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2])
+            globals['option_3'] = '4.'+str(d['option_3'][0]) + ', '+ str(d['option_3'][2])
+            buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)], [KeyboardButton(option_2)], [KeyboardButton(option_3)]]
+            pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
-    if len(data['Search']) >= 4:
-        for i in range(4):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
-        globals['option_0'] = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
-        globals['option_1'] = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
-        globals['option_2'] = '3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2])
-        globals['option_3'] = '4.'+str(d['option_3'][0]) + ', '+ str(d['option_3'][2])
-        buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)], [KeyboardButton(option_2)], [KeyboardButton(option_3)]]
-        pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+        elif len(data['Search']) == 3:
+            for i in range(3):
+                d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
+            globals['option_0'] = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
+            globals['option_1'] = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
+            globals['option_2'] = '3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2])
+            buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)], [KeyboardButton(option_2)]]
+            pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
-    elif len(data['Search']) == 3:
-        for i in range(3):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
-        globals['option_0'] = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
-        globals['option_1'] = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
-        globals['option_2'] = '3.'+str(d['option_2'][0]) +', ' +  str(d['option_2'][2])
-        buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)], [KeyboardButton(option_2)]]
-        pick = update.message.reply_text(text='Pick one',reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
-
-    elif len(data['Search']) == 2:
-        for i in range(2):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
-        globals['option_0'] = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
-        globals['option_1'] = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
-        buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)]]
-        pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
+        elif len(data['Search']) == 2:
+            for i in range(2):
+                d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID'], data['Search'][i]['Year']]
+            globals['option_0'] = '1.'+str(d['option_0'][0]) +', '+ str(d['option_0'][2])
+            globals['option_1'] = '2.'+str(d['option_1'][0]) + ', ' + str(d['option_1'][2])
+            buttons = [[KeyboardButton(option_0)], [KeyboardButton(option_1)]]
+            pick = update.message.reply_text(text='Pick one', reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True, selective=True))
 
 
-    elif len(data['Search']) == 1:
-        for i in range(1):
-            d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
-        txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
-        update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
-    
+        elif len(data['Search']) == 1:
+            for i in range(1):
+                d["option_{0}".format(i)] = [data['Search'][i]['Title'], data['Search'][i]['imdbID']]
+            txt, poster = get_rotten_tomatoes_rating(d['option_0'][1])
+            update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
+        
     else:
         txt, poster = get_rotten_tomatoes_rating('on your majesty secret service')
         update.message.reply_photo(poster, caption= str(txt), parse_mode="MARKDOWNV2")
