@@ -312,8 +312,8 @@ def get_results(update: Update, context: CallbackContext):
         
     
 def remove_keyboard(update: Update, context: CallbackContext):
-    update.message.reply_text(text='Removed',reply_markup=ReplyKeyboardRemove(selective=True))
-
+    m = update.message.reply_text(text='Removed',reply_markup=ReplyKeyboardRemove(selective=True))
+    m.delete()
 def error(update, context):
     """Log Errors caused by Updates."""
     logger.warning('Update "%s" caused error "%s"', update, context.error)
