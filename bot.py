@@ -312,7 +312,7 @@ def get_results(update: Update, context: CallbackContext):
         
     
 def remove_keyboard(update: Update, context: CallbackContext):
-    update.message.reply_text(chat_id = update.effective_chat.id, text='Here it is',reply_markup=ReplyKeyboardRemove(selective=True))
+    update.message.reply_text(text='Removed',reply_markup=ReplyKeyboardRemove(selective=True))
 
 def error(update, context):
     """Log Errors caused by Updates."""
