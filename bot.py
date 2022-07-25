@@ -323,7 +323,7 @@ def main():
                   use_context=True)
     updater.dispatcher.add_handler(CommandHandler('nota', get_results))
     updater.dispatcher.add_handler(CommandHandler('game', get_game_results))
-    updater.dispatcher.add_handler(CommandHandler('keyboard', remove_keyboard()))
+    updater.dispatcher.add_handler(CommandHandler('keyboard', remove_keyboard))
 
 
     updater.dispatcher.add_error_handler(error)
